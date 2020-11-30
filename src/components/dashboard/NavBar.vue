@@ -93,7 +93,7 @@ export default {
                 { title: "Feast Menu", to: "/feasts" },
             ],
             logoutdialog: false,
-            username: '',
+            username: 'Loading...',
             profileImage: '',
         }
     },

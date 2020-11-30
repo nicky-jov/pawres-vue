@@ -24,23 +24,26 @@
                             <h1>Account Details</h1>
                             <hr color="grey">
                             <h3>
-                                Username: <span style="float: right;">User</span>
+                                Username: <span style="float: right;">{{form.username}}</span>
                             </h3>
                             <h3>
-                                E-mail: <span style="float: right;">useremail@mail.com</span>
+                                E-mail: <span style="float: right;">{{form.email}}</span>
                             </h3>
                             <h3>
-                                Status: <span style="float: right;"><font color="lightgreen">Verified ✓</font></span>
+                                Status: <span style="float: right;">
+                                            <font color="lightgreen" v-if="form.verified != 'Loading...'">Verified ✓</font>
+                                            <font v-else>Loading...</font>
+                                        </span>
                             </h3>
                             <h3>
-                                Phone Number: <span style="float: right;">08123123123123</span>
+                                Phone Number: <span style="float: right;">{{form.phone}}</span>
                             </h3>
                             <br>
                             <br>
                         </font>
                         <div class="center">
                             <button type="button" 
-                                class="btn btn-light"
+                                class="btn btn-danger"
                                 data-toggle="modal" 
                                 data-target="#editmodal">Edit Profile
                             </button>
@@ -62,7 +65,13 @@ export default {
     name: "Profile",
     data() {
         return {
-
+            form: {
+                username: 'Loading...',
+                email: 'Loading...',
+                profileImage: '',
+                phone: 'Loading...',
+                verified: 'Loading...',
+            }
         }
     },
     methods: {
@@ -72,8 +81,11 @@ export default {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 } 
             }).then(response => {
-                this.username = response.data.userdata.username;
-                this.profileImage = response.data.userdata.image;
+                this.form.username = response.data.userdata.username;
+                this.form.profileImage = response.data.userdata.image;
+                this.form.email = response.data.userdata.email;
+                this.form.phone = response.data.userdata.phone_number;
+                this.form.verified = response.data.userdata.emmail_verified_at;
             });
         },
     },
@@ -117,7 +129,7 @@ export default {
     box-shadow: 0 0 20px 0px black;
 }
 .infobox {
-    width: 100%;
+    width: 40vw;
     margin-right: 50px;
 }
 .center{text-align: -webkit-center;}
