@@ -38,11 +38,19 @@
         <div id="navbar-right">
           <div class="dropdown">
             <v-text>
-              <img 
+                <img v-if="profileImage == ''"
+                    src="@/assets/loading.gif"
+                    class="mr-2"
+                    style="border-radius: 100%; object-fit: cover;"
+                    width=40
+                    height=40
+                />
+              <img v-else
                 :src="this.profileImage"
                 lazy-src="~@/assets/author1.png"
                 id="avatar" 
                 width=40
+                height=40
                 class="mr-2" style="border-radius: 100%;"/>
               {{this.username}}<span>  ▼</span>
             </v-text>
@@ -126,6 +134,7 @@ export default {
             });
         },
         loadData() {
+            this.username = localStorage.getItem('username');
             this.$http.get(this.$api + '/userdata', {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -166,6 +175,9 @@ export default {
 @import '~@/assets/styles/dashboard.css';
 @import '~@/assets/styles/dashnavtop.css';
 @import '~@/assets/styles/scrollbar.css';
+v-text {
+    font-family: 'Hurme';
+}
 .profile-section {
     margin: 0 150px;
     background: #171717;

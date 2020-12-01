@@ -15,7 +15,12 @@
             <table>
                 <th>
                     <td>
-                        <img id="profileImage" src="https://images.unsplash.com/photo-1511298521967-cefc9f26ec55?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1942&q=80"/>
+                        <img id="profileImage" v-if="form.profileImage == ''"
+                            src="@/assets/loading.gif"
+                        />
+                        <img id="profileImage" v-else
+                            :src="form.profileImage"
+                        />
                     </td>
                 </th>
                 <th>
@@ -42,11 +47,18 @@
                             <br>
                         </font>
                         <div class="center">
-                            <button type="button" 
-                                class="btn btn-danger"
+                            <v-btn type="button" 
+                                class="btn btn-danger mr-2"
                                 data-toggle="modal" 
+                                @click="editDialog = true"
                                 data-target="#editmodal">Edit Profile
-                            </button>
+                            </v-btn>
+                            <v-btn type="button" 
+                                class="btn btn-danger ml-2"
+                                data-toggle="modal" 
+                                @click="passwordDialog = true"
+                                data-target="#editmodal">Change Password
+                            </v-btn>
                         </div>
                     </td>
                 </th>
@@ -57,6 +69,83 @@
             <br>
           </div>
         </div>
+
+        <v-dialog v-model="editDialog" 
+            persistent 
+            max-width="600px">
+            <v-card>
+                <v-card-title>
+                    <span class="headline" style="font-family: Hurme !important;">Change Picture</span>
+                </v-card-title>
+                <v-card-actions>
+                    <v-file-input label="File" placeholder="Select file here..." @change='upload_image'></v-file-input>
+                </v-card-actions>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn light>Upload Image</v-btn>
+                </v-card-actions>
+
+            </v-card>
+            <v-card>
+                <v-card-title>
+                    <span class="headline" style="font-family: Hurme !important;">Edit Profile</span>
+                </v-card-title>
+                <v-card-text>
+                    <v-text-field  
+                        v-model="formEdit.username"
+                        label="Username"
+                    ></v-text-field>
+                    <v-text-field  
+                        v-model="formEdit.phone"
+                        label="Phone Number"
+                    ></v-text-field>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn dark class="red" @click="editDialog = false">Cancel</v-btn>
+                    <v-btn light @click="editDetails">Save Changes</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+        <v-dialog v-model="passwordDialog" 
+            persistent 
+            max-width="600px">
+            <v-card>
+                <v-card-title>
+                    <span class="headline" style="font-family: Hurme !important;">Change Password</span>
+                </v-card-title>
+                <v-card-text>
+                    <v-text-field 
+                        placeholder="Old Password" 
+                        v-model="form.oldpassword"
+                        type="password"
+                        required
+                    ></v-text-field>
+                    <v-text-field
+                        placeholder="New Password"
+                        v-model="form.newpassword"
+                        type="password"
+                        required
+                    ></v-text-field>
+                    <v-text-field 
+                        placeholder="Confirm Password"
+                        v-model="form.confirmpassword"
+                        type="password" 
+                        required
+                    ></v-text-field>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn dark class="red" @click="passwordDialog = false">Cancel</v-btn>
+                    <v-btn light @click="changePassword">Apply Changes</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+        <v-snackbar v-model="snackbar" :color="color" timeout="2000" top>
+            {{error_message}}
+        </v-snackbar>
     </div>
 </template>
 
@@ -71,7 +160,20 @@ export default {
                 profileImage: '',
                 phone: 'Loading...',
                 verified: 'Loading...',
-            }
+                oldpassword: '',
+                newpassword: '',
+                confirmpassword:'',
+            },
+            formEdit: {
+                username: '',
+                phone: '',
+            },
+            error_message: '',
+            snackbar: false,
+            color: 'green',
+            editDialog: false,
+            passwordDialog: false,
+            imgData: null,
         }
     },
     methods: {
@@ -86,8 +188,92 @@ export default {
                 this.form.email = response.data.userdata.email;
                 this.form.phone = response.data.userdata.phone_number;
                 this.form.verified = response.data.userdata.emmail_verified_at;
+
+                this.formEdit.username = this.form.username;
+                this.formEdit.phone = this.form.phone;
             });
         },
+
+        changePassword() {
+            this.$http.post(this.$api + '/change-password' , {
+                old_password: this.form.oldpassword,
+                new_password: this.form.newpassword,
+                confirm_password: this.form.confirmpassword,
+            }, {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+            }).then(response => {
+                this.error_message=response.data.message; 
+                if(this.error_message == "Data was successfully updated") {
+                    this.color="green"
+                    this.passwordDialog = false;
+                    this.form.oldpassword = '';
+                    this.form.newpassword = '';
+                    this.form.confirmpassword = '';
+                }
+                else 
+                    this.color="red"
+                this.snackbar=true;
+            }).catch(err => {
+                this.error_message=err.response.data.message;
+                this.color="red"
+                this.snackbar=true;
+            });
+        },
+
+        editDetails() {
+            this.$http.post(this.$api + '/change-details' , {
+                username: this.form.username,
+                phone_number: this.form.phone,
+            }, {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+            }).then(response => {
+                this.error_message=response.data.message; 
+                this.color="green";
+                this.snackbar=true;
+            }).catch(err => {
+                this.error_message=err.response.data.message;
+                this.color="red"
+                this.snackbar=true;
+            });
+        },
+
+        upload_image(evt){
+            let img_file = evt.target.files[0];
+            let reader = new FileReader();
+
+            if (img_file['size'] < 2111775) { //Check if the file is smaller than 2 Megs
+                reader.onloadend = (img_file) => {
+                    this.form.image = reader.result;
+                }
+                this.imgData.append("image", img_file);
+                reader.readAsDataURL(img_file);
+            } else {
+                this.error_message="File cannot be larger than 2MB";
+                this.color="red";
+                this.snackbar=true;
+            }
+        },
+
+        saveImage() {
+            this.$http.post(this.$api + '/upload-image', this.imgData, {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+            }).then(response => {
+                this.error_message=response.data.message;
+                this.snackbar=true;
+                this.color="green";
+                this.readData();
+            }).catch(err => {
+                this.error_message=err.response.data.message;
+                this.color="red";
+                this.snackbar=true;
+            });
+        }
     },
     mounted() {
         this.loadData();
@@ -113,6 +299,9 @@ export default {
   overflow-y: scroll;
   overflow-x: hidden;
 }
+* {
+    font-family: 'Hurme' !important;
+}
 .profile-section {
     margin: 0 150px;
     background: #171717;
@@ -131,6 +320,9 @@ export default {
 .infobox {
     width: 40vw;
     margin-right: 50px;
+}
+button, input, select, textarea {
+    color: gray;
 }
 .center{text-align: -webkit-center;}
 </style>

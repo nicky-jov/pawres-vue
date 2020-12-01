@@ -98,6 +98,7 @@ export default {
                     password: this.form.password,
                 }).then(response => {
                     localStorage.setItem('id', response.data.user.id);
+                    localStorage.setItem('username', response.data.user.username);
                     localStorage.setItem('token', response.data.access_token);
                     this.error_message=response.data.message; 
                     this.color="green";
