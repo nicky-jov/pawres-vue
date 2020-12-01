@@ -19,7 +19,7 @@
                             src="@/assets/loading.gif"
                         />
                         <img id="profileImage" v-else
-                            :src="form.profileImage"
+                            :src="this.$public + form.profileImage"
                         />
                     </td>
                 </th>
@@ -78,11 +78,11 @@
                     <span class="headline" style="font-family: Hurme !important;">Change Picture</span>
                 </v-card-title>
                 <v-card-actions>
-                    <v-file-input label="File" placeholder="Select file here..." @change='upload_image'></v-file-input>
+                    <input type="file" label="File" placeholder="Select file here..." @change='upload_image'>
                 </v-card-actions>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn light>Upload Image</v-btn>
+                    <v-btn light @click="saveImage">Upload Image</v-btn>
                 </v-card-actions>
 
             </v-card>
@@ -173,7 +173,7 @@ export default {
             color: 'green',
             editDialog: false,
             passwordDialog: false,
-            imgData: null,
+            imgData: new FormData,
         }
     },
     methods: {
@@ -211,6 +211,7 @@ export default {
                     this.form.oldpassword = '';
                     this.form.newpassword = '';
                     this.form.confirmpassword = '';
+                    this.loadData();
                 }
                 else 
                     this.color="red"
@@ -234,6 +235,7 @@ export default {
                 this.error_message=response.data.message; 
                 this.color="green";
                 this.snackbar=true;
+                this.loadData();
             }).catch(err => {
                 this.error_message=err.response.data.message;
                 this.color="red"
@@ -267,7 +269,7 @@ export default {
                 this.error_message=response.data.message;
                 this.snackbar=true;
                 this.color="green";
-                this.readData();
+                this.loadData();
             }).catch(err => {
                 this.error_message=err.response.data.message;
                 this.color="red";

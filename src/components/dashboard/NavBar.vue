@@ -46,7 +46,7 @@
                     height=40
                 />
               <img v-else
-                :src="this.profileImage"
+                :src="this.$public + this.profileImage"
                 lazy-src="~@/assets/author1.png"
                 id="avatar" 
                 width=40
