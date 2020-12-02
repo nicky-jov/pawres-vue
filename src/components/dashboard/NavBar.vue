@@ -112,6 +112,7 @@ export default {
             this.logoutdialog = true;
         },
         logout() {
+            this.progressBar = true;
             var url = this.$api + '/logout'
             //POST '/logout'
             this.$http.post(url, {}, { //Empty Data
@@ -125,6 +126,7 @@ export default {
                 localStorage.removeItem('username');
                 //Delete Axios Header
                 delete this.$http.defaults.headers.common['Authorization'];
+                this.progressBar = false;
 
                 //Push Login after logout
                 this.$router.push({
