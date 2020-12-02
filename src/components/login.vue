@@ -63,7 +63,7 @@
 <script>
 
 export default {
-    name: "Log In",
+    name: "login",
     data() {
         return {
             items: [
@@ -74,6 +74,7 @@ export default {
             valid: false,
             error_message: '',
             snackbar: false,
+            color: 'green',
             form: {
                 username: '',
                 password: '',

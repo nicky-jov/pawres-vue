@@ -128,6 +128,9 @@
                         Save
                     </v-btn>
                 </v-card-actions>
+                <v-flex>
+                    <v-progress-linear v-show="progressBar" slot="progress" color="blue" indeterminate></v-progress-linear>
+                </v-flex>
             </v-card>
         </v-dialog>
         
@@ -148,6 +151,9 @@
                         Delete
                     </v-btn>
                 </v-card-actions>
+                <v-flex>
+                    <v-progress-linear v-show="progressBar" slot="progress" color="red" indeterminate></v-progress-linear>
+                </v-flex>
             </v-card>
         </v-dialog>
 
@@ -156,7 +162,7 @@
                 <v-card-title>
                     <span class="headline">Reservation Details</span>
                 </v-card-title>
-                <v-card-text id="detailcontent">
+                <v-card-text>
                     <li>Transaction ID: <span style="float: right;">{{editId}} </span></li>
                     <li>Hotel Name: <span style="float: right;">{{form.hotel}} </span></li>
                     <li>Check-in Date: <span style="float: right;">{{form.checkin}} </span></li>
@@ -192,6 +198,7 @@ export default {
             reservation: new FormData,
             hotels: [],
             userform: new FormData,
+            username: '',
             deleteId: '',
             editId: '',
             dialog: false,
@@ -237,6 +244,7 @@ export default {
             }
         },
         loadData() {
+            this.progressBar = true;
             var url = this.$api + '/reservations'
             this.$http.get(url, {
                 headers: {
@@ -244,6 +252,9 @@ export default {
                 } 
             }).then(response => {
                 this.reservations = response.data.data;
+            }).catch(()=> {
+                this.progressBar = false;
+                this.loading = false;
             });
 
             var url2 = this.$api + '/hotels'
@@ -261,6 +272,7 @@ export default {
                 } 
             }).then(response => {
                 this.userform = response.data.userdata;
+                this.username = response.data.userdata.username;
             }).catch(error => {
                 this.error_message = error.response.data.message;
                 location.href = 'index';
@@ -275,7 +287,6 @@ export default {
             this.error_message='';
 
             var url = this.$api + '/reservations'
-            this.load = true
             this.$http.post(url, this.reservation, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -311,7 +322,6 @@ export default {
                 rooms: this.form.rooms,
             }
             var url = this.$api + '/reservations/' + this.editId;
-            this.load = true
             this.$http.put(url, newData, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -320,7 +330,6 @@ export default {
                 this.error_message=response.data.message;
                 this.color="green"
                 this.snackbar=true;
-                this.load = false;
                 this.close();
                 this.loadData();
                 this.resetForm();
@@ -330,7 +339,6 @@ export default {
                 this.error_message=error.response.data.message;
                 this.color="red"
                 this.snackbar=true;
-                this.load = false;
                 this.progressBar = false;
             }) 
         },
@@ -345,7 +353,6 @@ export default {
                 this.error_message=response.data.message;
                 this.color="green"
                 this.snackbar=true;
-                this.load = false;
                 this.close();
                 this.loadData();
                 this.resetForm();
@@ -355,7 +362,6 @@ export default {
                 this.error_message=error.response.data.message;
                 this.color="red"
                 this.snackbar=true;
-                this.load = false;
                 this.progressBar = false;
             })
         },
@@ -401,16 +407,50 @@ export default {
             };
         },
         printDetails() {
-            var logo = document.querySelector(".menu-inner > ul > img");
-            var prtContent = document.getElementById("detailcontent");
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0');
+            var yyyy = today.getFullYear();
+            today = mm + '/' + dd + '/' + yyyy;
             var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
-            WinPrint.document.write("<h1>PawRes - Reservations</h1>")
-            WinPrint.document.write(logo.innerHTML);
-            WinPrint.document.write("<table></table>", this.form.hotel);
+            WinPrint.document.write(`
+            <div style="width: 100%; text-align: -webkit-center; font-family: system-ui;">
+            <div style="width: 100%; height: 100%; box-shadow: 0 0 0 2px #7c7c7c;">
+            <br><div style="float: left;"><img src="https://pawres.s3.us-east-2.amazonaws.com/logo-black.png" 
+            style="height: 50px; margin-left: 50px;"/></div>
+            <br><br><br>
+            <h1>PawRes - Reservations Details</h1><hr width="84%" color="black">
+            <br><div style="width: 80vw; text-align: left;">
+            Username: `,this.username,`
+            <span style="float: right;">Transaction ID: `,this.editId, `<br>
+            Date: `, today, `</span></div><br><br>
+            <table border="0" cellpadding="10" style="width: 80vw;" >
+            <tbody style="border: none;">
+                <tr>
+                    <th style="text-align: left;">Hotel Name:</th>
+                    <td style="text-align: right;">`, this.form.hotel,`</td>
+                </tr>
+                <tr>
+                    <th style="text-align: left;">Check-in Date:</th>
+                    <td style="text-align: right;">`, this.form.checkin,`</td>
+                </tr>
+                <tr>
+                    <th style="text-align: left;">Duration:</th>
+                    <td style="text-align: right;">`, this.form.duration ,` nights</td>
+                </tr>
+                <tr>
+                    <th style="text-align: left;">Rooms:</th>
+                    <td style="text-align: right;">`, this.form.rooms, `</td>
+                </tr>
+                <tr>
+                    <th style="text-align: left;">Price:</th>
+                    <td style="text-align: right;"> Rp. `, this.form.price, `</td>
+                </tr>
+            </tbody></table><br><br></div></div>`);
             WinPrint.document.close();
             WinPrint.focus();
-            WinPrint.print();
-            setTimeout(function(){WinPrint.close();}, 200);
+            setTimeout(function () { WinPrint.print(); }, 500);
+            window.onfocus = function () { setTimeout(function () { WinPrint.close(); }, 500); }
         },
     },
     mounted() {
@@ -422,7 +462,7 @@ export default {
       },
     },
     watch:{
-        userform(){
+        reservations(){
             this.progressBar = false
             this.loading = false
         }    

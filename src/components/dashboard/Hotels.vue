@@ -80,6 +80,9 @@
                         Save
                     </v-btn>
                 </v-card-actions>
+                <v-flex>
+                    <v-progress-linear v-show="progressBar" slot="progress" color="blue" indeterminate></v-progress-linear>
+                </v-flex>
             </v-card>
         </v-dialog>
         
@@ -100,6 +103,9 @@
                         Delete
                     </v-btn>
                 </v-card-actions>
+                <v-flex>
+                    <v-progress-linear v-show="progressBar" slot="progress" color="red" indeterminate></v-progress-linear>
+                </v-flex>
             </v-card>
         </v-dialog>
 
@@ -165,6 +171,9 @@ export default {
                 } 
             }).then(response => {
                 this.hotels = response.data.data
+            }).catch(()=> {
+                this.progressBar = false;
+                this.loading = false;
             });
 
             this.$http.get(this.$api + '/userdata', {
@@ -318,7 +327,7 @@ export default {
       },
     },
     watch:{
-        userform(){
+        hotels(){
             this.progressBar = false
             this.loading = false
         }    
