@@ -121,6 +121,8 @@ export default {
             }).then(() => {
                 //Remove Local Token
                 localStorage.removeItem('token');
+                localStorage.removeItem('id');
+                localStorage.removeItem('username');
                 //Delete Axios Header
                 delete this.$http.defaults.headers.common['Authorization'];
 
