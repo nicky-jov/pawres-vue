@@ -17,7 +17,9 @@
         </div>
 
         <div class="fullheight">
-            <router-view></router-view>
+            <keep-alive>
+                <router-view></router-view>
+            </keep-alive>
         </div>
 
         <div class="nav-body" style="display: none;">
