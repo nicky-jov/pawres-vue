@@ -85,6 +85,9 @@
                     Yes
                 </v-btn>
             </v-card-actions>
+            <v-flex>
+                <v-progress-linear v-show="progressBarLogout" slot="progress" color="yellow" indeterminate></v-progress-linear>
+            </v-flex>
         </v-card>
     </v-dialog>
 </div>
@@ -106,6 +109,7 @@ export default {
             username: 'Loading...',
             profileImage: '',
             progressBar: true,
+            progressBarLogout: false,
             userform: new FormData,
         }
     },
@@ -114,7 +118,7 @@ export default {
             this.logoutdialog = true;
         },
         logout() {
-            this.progressBar = true;
+            this.progressBarLogout = true;
             var url = this.$api + '/logout'
             //POST '/logout'
             this.$http.post(url, {}, { //Empty Data
@@ -128,7 +132,7 @@ export default {
                 localStorage.removeItem('username');
                 //Delete Axios Header
                 delete this.$http.defaults.headers.common['Authorization'];
-                this.progressBar = false;
+                this.progressBarLogout = false;
 
                 //Push Login after logout
                 this.$router.push({
@@ -145,7 +149,7 @@ export default {
                 localStorage.removeItem('username');
                 //Delete Axios Header
                 delete this.$http.defaults.headers.common['Authorization'];
-                this.progressBar = false;
+                this.progressBarLogout = false;
                 this.$router.push({
                     name: 'index',
                 }).then(()=> {

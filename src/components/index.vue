@@ -282,6 +282,7 @@ export default {
         let mapboxScript = document.createElement('script')
         mapboxScript.setAttribute('src', 'https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js')
         document.head.appendChild(mapboxScript)
+        
     },
     methods: {
       onMapLoaded(event) {
@@ -290,19 +291,11 @@ export default {
         // or just to store if you want have access from other components
         this.$store.map = event.map;
         
-        var popup = new mapboxgl.Popup({ offset: 20 }).setText(
-        'PAWRes Headquarters is located here!'
-        );
-
-        var marker = new mapboxgl.Marker()
-          .setLngLat([110.416169, -7.779292])
-          .setPopup(popup)
-          .addTo(map);
       },
     },
     created() {
       // We need to set mapbox-gl library here in order to use it in template
-      this.mapbox = Mapbox;
+      // this.mapbox = Mapbox;
     }
 }
 </script>

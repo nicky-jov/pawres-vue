@@ -1,5 +1,6 @@
 <template>
     <div class="content-login">
+        <v-progress-linear v-show="progressBar" slot="progress" color="yellow" indeterminate></v-progress-linear>
         <div class='portfolio'>
             <div class='page_portfolioz'>
                 <div class='portfolio_home__header'>
@@ -85,6 +86,7 @@ export default {
             passwordRules: [
                 (v) => !!v || 'Password is empty!',
             ],
+            progressBar: false,
         }
     },
     mounted() {
@@ -94,6 +96,7 @@ export default {
         login() {
             if (this.$refs.form.validate()) {
                 this.error_message = ''
+                this.progressBar = true
                 this.$http.post(this.$api + '/login', {
                     username: this.form.username,
                     password: this.form.password,
@@ -104,7 +107,7 @@ export default {
                     this.error_message=response.data.message; 
                     this.color="green";
                     this.snackbar=true;
-                    this.load = false;
+                    this.progressBar = false;
                     location.href = "/dashboard"
                 }).catch(error => {
                     if (error.response.data.message.username)
@@ -116,7 +119,7 @@ export default {
                     this.color="red"
                     this.snackbar=true;
                     localStorage.removeItem('token')
-                    this.load = false;
+                    this.progressBar = false;
                 });
             }
         }

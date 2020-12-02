@@ -83,7 +83,7 @@
                     <span class="headline" style="font-family: Hurme !important;">Change Picture</span>
                 </v-card-title>
                 <v-card-actions>
-                    <input type="file" label="File" placeholder="Select file here..." @change='upload_image'>
+                    <input class="ml-15" type="file" label="File" placeholder="Select file here..." @change='upload_image'>
                 </v-card-actions>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -108,6 +108,9 @@
                     <v-btn dark class="red" @click="editDialog = false">Cancel</v-btn>
                     <v-btn light @click="editDetails">Save Changes</v-btn>
                 </v-card-actions>
+                <v-flex>
+                    <v-progress-linear v-show="progressBarDialog" slot="progress" color="yellow" indeterminate></v-progress-linear>
+                </v-flex>
             </v-card>
         </v-dialog>
 
@@ -123,18 +126,21 @@
                         placeholder="Old Password" 
                         v-model="form.oldpassword"
                         type="password"
+                        outlined
                         required
                     ></v-text-field>
                     <v-text-field
                         placeholder="New Password"
                         v-model="form.newpassword"
                         type="password"
+                        outlined
                         required
                     ></v-text-field>
                     <v-text-field 
                         placeholder="Confirm Password"
                         v-model="form.confirmpassword"
                         type="password" 
+                        outlined
                         required
                     ></v-text-field>
                 </v-card-text>
@@ -143,6 +149,9 @@
                     <v-btn dark class="red" @click="passwordDialog = false">Cancel</v-btn>
                     <v-btn light @click="changePassword">Apply Changes</v-btn>
                 </v-card-actions>
+                <v-flex>
+                    <v-progress-linear v-show="progressBarDialog" slot="progress" color="yellow" indeterminate></v-progress-linear>
+                </v-flex>
             </v-card>
         </v-dialog>
 
@@ -178,6 +187,7 @@ export default {
             passwordDialog: false,
             imgData: new FormData,
             progressBar: true,
+            progressBarDialog: false,
             userform: new FormData,
         }
     },
@@ -204,7 +214,7 @@ export default {
         },
 
         changePassword() {
-            this.progressBar = true;
+            this.progressBarDialog = true;
             this.$http.post(this.$api + '/change-password' , {
                 old_password: this.form.oldpassword,
                 new_password: this.form.newpassword,
@@ -221,23 +231,23 @@ export default {
                     this.form.oldpassword = '';
                     this.form.newpassword = '';
                     this.form.confirmpassword = '';
-                    this.progressBar = false;
+                    this.progressBarDialog = false;
                     this.loadData();
                 }
                 else 
                     this.color="red"
                 this.snackbar=true;
-                this.progressBar = false;
+                this.progressBarDialog = false;
             }).catch(err => {
                 this.error_message=err.response.data.message;
                 this.color="red"
                 this.snackbar=true;
-                this.progressBar = false;
+                this.progressBarDialog = false;
             });
         },
 
         editDetails() {
-            this.progressBar = true;
+            this.progressBarDialog = true;
             this.$http.post(this.$api + '/change-details' , {
                 username: this.form.username,
                 phone_number: this.form.phone,
@@ -249,13 +259,13 @@ export default {
                 this.error_message=response.data.message; 
                 this.color="green";
                 this.snackbar=true;
-                this.progressBar = false;
+                this.progressBarDialog = false;
                 this.loadData();
             }).catch(err => {
                 this.error_message=err.response.data.message;
                 this.color="red"
                 this.snackbar=true;
-                this.progressBar = false;
+                this.progressBarDialog = false;
             });
         },
 
@@ -277,7 +287,7 @@ export default {
         },
 
         saveImage() {
-            this.progressBar = true;
+            this.progressBarDialog = true;
             this.$http.post(this.$api + '/upload-image', this.imgData, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -285,7 +295,7 @@ export default {
             }).then(response => {
                 this.error_message=response.data.message;
                 this.snackbar=true;
-                this.progressBar = false;
+                this.progressBarDialog = false;
                 this.color="green";
                 this.loadData();
                 location.href = "profile";
@@ -293,7 +303,7 @@ export default {
                 this.error_message=err.response.data.message;
                 this.color="red";
                 this.snackbar=true;
-                this.progressBar = false;
+                this.progressBarDialog = false;
             });
         }
     },
