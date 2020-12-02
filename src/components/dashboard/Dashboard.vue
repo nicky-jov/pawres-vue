@@ -3,7 +3,7 @@
         <br><br><br><br>
 
         <h1 class="text-left ml-5" style="font-size: 75px;">
-            <font color="white">Welcome, User<font color="yellow">!</font></font>
+            <font color="white">Welcome, {{username}}<font color="yellow">!</font></font>
         </h1>
         
         <div class="modal fade" role="dialog" id="ﾖﾂﾊﾞ"><div class="modal-dialog center"><div class="modal-body"><img id="ysb" style="width: 50vw; float: left; object-fit: cover;"></div></div></div>
@@ -192,12 +192,13 @@ export default {
     name: "Dashboard",
     data() {
         return {
-            images: {
-                profile: "https://images.unsplash.com/photo-1485635153370-c97bb55602c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80",
-                reservations: "https://images.unsplash.com/photo-1525905708812-b271b5e3b2f3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2001&q=80",
-                hotels: "https://images.unsplash.com/photo-1583325981638-776a0aed5375?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80",
-                feasts: "https://images.unsplash.com/photo-1580917109855-6817741b51e4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1901&q=80",
-            }
+          username: '',
+          images: {
+              profile: "https://images.unsplash.com/photo-1485635153370-c97bb55602c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80",
+              reservations: "https://images.unsplash.com/photo-1525905708812-b271b5e3b2f3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2001&q=80",
+              hotels: "https://images.unsplash.com/photo-1583325981638-776a0aed5375?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80",
+              feasts: "https://images.unsplash.com/photo-1580917109855-6817741b51e4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1901&q=80",
+          }
         }
     },
     mounted() {
@@ -235,6 +236,22 @@ export default {
                 name: "Feasts",
             });
         },
+        loadData() {
+          this.$http.get(this.$api + '/userdata', {
+              headers: {
+                  'Authorization': 'Bearer ' + localStorage.getItem('token')
+              } 
+          }).then(response => {
+              this.username = response.data.userdata.username;
+          }).catch(error => {
+              this.error_message = error.response.data.message;
+              location.href = 'index';
+          })
+        }
+    },
+    mounted() {
+      this.username = localStorage.getItem('username');
+      this.loadData();
     }
 }
 </script>
