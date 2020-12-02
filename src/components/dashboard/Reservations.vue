@@ -299,6 +299,7 @@ export default {
                     this.error_message= this.error_message + '\n'  + error.response.data.message.rooms;
                 this.color="red"
                 this.snackbar=true;
+                this.progressBar = false;
             })
         },
         update() {
@@ -330,6 +331,7 @@ export default {
                 this.color="red"
                 this.snackbar=true;
                 this.load = false;
+                this.progressBar = false;
             }) 
         },
         deleteData() {
@@ -354,6 +356,7 @@ export default {
                 this.color="red"
                 this.snackbar=true;
                 this.load = false;
+                this.progressBar = false;
             })
         },
         editHandler(item){

@@ -225,10 +225,12 @@ export default {
                 else 
                     this.color="red"
                 this.snackbar=true;
+                this.progressBar = false;
             }).catch(err => {
                 this.error_message=err.response.data.message;
                 this.color="red"
                 this.snackbar=true;
+                this.progressBar = false;
             });
         },
 
@@ -251,6 +253,7 @@ export default {
                 this.error_message=err.response.data.message;
                 this.color="red"
                 this.snackbar=true;
+                this.progressBar = false;
             });
         },
 
@@ -288,6 +291,7 @@ export default {
                 this.error_message=err.response.data.message;
                 this.color="red";
                 this.snackbar=true;
+                this.progressBar = false;
             });
         }
     },

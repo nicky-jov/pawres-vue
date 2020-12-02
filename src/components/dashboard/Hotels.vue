@@ -157,6 +157,7 @@ export default {
             }
         },
         loadData() {
+            this.progressBar = true;
             var url = this.$api + '/hotels'
             this.$http.get(url, {
                 headers: {
@@ -178,6 +179,7 @@ export default {
             })
         },
         save() {
+            this.progressBar = true;
             this.hotel.append('name', this.form.name);
             this.hotel.append('address', this.form.address);
             this.hotel.append('contact', this.form.contact);
@@ -195,6 +197,7 @@ export default {
                 this.error_message=response.data.message;
                 this.color="green"
                 this.snackbar=true;
+                this.progressBar = false;
                 this.close();
                 this.loadData();
                 this.resetForm();
@@ -211,9 +214,11 @@ export default {
                     this.error_message= this.error_message + '\n'  + error.response.data.message.price;
                 this.color="red"
                 this.snackbar=true;
+                this.progressBar = false;
             })
         },
         update() {
+            this.progressBar = true;
             let newData = {
                 name: this.form.name,
                 address: this.form.address,
@@ -232,6 +237,7 @@ export default {
                 this.color="green"
                 this.snackbar=true;
                 this.load = false;
+                this.progressBar = false;
                 this.close();
                 this.loadData();
                 this.resetForm();
@@ -241,9 +247,11 @@ export default {
                 this.color="red"
                 this.snackbar=true;
                 this.load = false;
+                this.progressBar = false;
             }) 
         },
         deleteData() {
+            this.progressBar = true;
             var url = this.$api + '/hotels/' + this.deleteId;
             this.$http.delete(url, {
                 headers: {
@@ -254,6 +262,7 @@ export default {
                 this.color="green"
                 this.snackbar=true;
                 this.load = false;
+                this.progressBar = false;
                 this.close();
                 this.loadData();
                 this.resetForm();
@@ -263,6 +272,7 @@ export default {
                 this.color="red"
                 this.snackbar=true;
                 this.load = false;
+                this.progressBar = false;
             })
         },
         editHandler(item){
