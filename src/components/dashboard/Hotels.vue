@@ -39,6 +39,14 @@
 
         <v-dialog v-model="dialog" persistent max-width="600px">
             <v-card>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
+                    <v-flex class="text-right">
+                        <v-icon color="red" @click="cancel">mdi-close</v-icon>
+                    </v-flex>
+                </v-card-actions>
                 <v-card-title>
                     <span class="headline">{{ inputType }} Hotel</span>
                 </v-card-title>
@@ -88,6 +96,14 @@
         
         <v-dialog v-model="dialogConfirm" persistent max-width="600px">
             <v-card>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
+                    <v-flex class="text-right">
+                        <v-icon color="red" @click="dialogConfirm = false">mdi-close</v-icon>
+                    </v-flex>
+                </v-card-actions>
                 <v-card-title>
                     <span class="headline">Delete Confirmation</span>
                 </v-card-title>

@@ -12,8 +12,11 @@ var pageURLCheckTimer = setInterval (
     }, 100);
   
 function scroll() {
+  var content;
   if(document.querySelector('.dashboard-content'))
-    document.querySelector('.dashboard-content').onscroll = function() {scrollFunction()};
+    content = document.querySelector('.dashboard-content')
+
+  content.onscroll = function() {scrollFunction()};
 
   function scrollFunction() {
     if (document.querySelector('.dashboard-content').scrollTop > 80 || document.querySelector('.dashboard-content').scrollTop > 80) {

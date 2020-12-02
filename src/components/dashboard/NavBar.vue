@@ -63,7 +63,9 @@
           </div>
         </div>
       </div>
+      <keep-alive>
         <router-view></router-view>
+      </keep-alive>
     </div>
     
     <v-dialog v-model="logoutdialog" persistent max-width="600px">
@@ -137,6 +139,18 @@ export default {
             }).catch(error => {
                 //prints error to console
                 console.log(error);
+                //Remove Local Token
+                localStorage.removeItem('token');
+                localStorage.removeItem('id');
+                localStorage.removeItem('username');
+                //Delete Axios Header
+                delete this.$http.defaults.headers.common['Authorization'];
+                this.progressBar = false;
+                this.$router.push({
+                    name: 'index',
+                }).then(()=> {
+                    location.href="index";
+                })
             });
         },
         loadData() {

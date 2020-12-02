@@ -42,6 +42,14 @@
 
         <v-dialog v-model="dialog" persistent max-width="600px">
             <v-card>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
+                    <v-flex class="text-right">
+                        <v-icon color="red" @click="cancel">mdi-close</v-icon>
+                    </v-flex>
+                </v-card-actions>
                 <v-card-title>
                     <span class="headline">{{ inputType }} Reservation</span>
                 </v-card-title>
@@ -136,6 +144,14 @@
         
         <v-dialog v-model="dialogConfirm" persistent max-width="600px">
             <v-card>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
+                    <v-flex class="text-right">
+                        <v-icon color="red" @click="dialogConfirm = false">mdi-close</v-icon>
+                    </v-flex>
+                </v-card-actions>
                 <v-card-title>
                     <span class="headline">Delete Confirmation</span>
                 </v-card-title>
@@ -159,6 +175,14 @@
 
         <v-dialog v-model="dialogDetails" persistent max-width="600px">
             <v-card>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
+                    <v-flex class="text-right">
+                        <v-icon color="red" @click="dialogDetails = false">mdi-close</v-icon>
+                    </v-flex>
+                </v-card-actions>
                 <v-card-title>
                     <span class="headline">Reservation Details</span>
                 </v-card-title>
@@ -419,7 +443,7 @@ export default {
             <br><div style="float: left;"><img src="https://pawres.s3.us-east-2.amazonaws.com/logo-black.png" 
             style="height: 50px; margin-left: 50px;"/></div>
             <br><br><br>
-            <h1>PawRes - Reservations Details</h1><hr width="84%" color="black">
+            <h1>PawRes - Reservation Details</h1><hr width="84%" color="black">
             <br><div style="width: 80vw; text-align: left;">
             Username: `,this.username,`
             <span style="float: right;">Transaction ID: `,this.editId, `<br>

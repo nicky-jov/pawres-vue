@@ -89,7 +89,7 @@
             <br>
             <br>
             <h4 class="text-left ml-5">
-                <font class="ml-2" color="white" size=6>What's New?</font><br>
+                <font class="ml-2" color="white" size=6>What's New? <v-icon>mdi-mailbox</v-icon></font><br>
                 <font class="ml-2" color="white" size=3 style="font-style: italic">Check out our latest updates.</font>
             </h4>
 
@@ -158,6 +158,35 @@
                         <p>Nov 18th 2020</p>
                         <h3>This is my third article in a single day</h3>
                         <p>And I don't really care!</p>
+                      </header>
+              
+                      <div class="card-author">
+                        <a class="author-avatar" href="#">
+                          <img src="@/assets/author1.png" />
+                        </a>
+                        <svg class="half-circle" viewBox="0 0 106 57">
+                          <path d="M102 4c0 27.1-21.9 49-49 49S4 31.1 4 4"></path>
+                        </svg>
+              
+                        <div class="author-name">
+                          <div class="author-name-prefix">Author</div>
+                          Axcel Santoso
+                        </div>
+                      </div>
+                      
+                      <div class="tags">
+                        <a href="#">html</a>
+                        <a href="#">java</a>
+                        <a href="#">web-dev</a>
+                      </div>
+                    </article>
+
+                
+                  <article class="card-article">
+                      <header class="card-header">
+                        <p>Dec 3rd 2020</p>
+                        <h3>We launched an API-based platform</h3>
+                        <p>And I still don't really care!</p>
                       </header>
               
                       <div class="card-author">

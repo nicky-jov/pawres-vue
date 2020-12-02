@@ -1,5 +1,5 @@
 <template>
-    <div class="dashboard-content-profile">
+    <div class="dashboard-content">
         <br>
       <br>
       <br>
@@ -37,7 +37,7 @@
                             </h3>
                             <h3>
                                 Status: <span style="float: right;">
-                                            <font color="lightgreen" v-if="form.verified != 'Loading...'">Verified ✓</font>
+                                            <font class="green--text text--lighten-2" v-if="form.verified != 'Loading...'">Verified <v-icon class="green--text text--lighten-2">mdi-checkbox-marked-circle-outline</v-icon></font>
                                             <font v-else>Loading...</font>
                                         </span>
                             </h3>
@@ -70,6 +70,10 @@
             <br>
           </div>
         </div>
+            <br>
+            <br>
+            <br>
+            <br>
 
         <v-dialog v-model="editDialog" 
             persistent 
@@ -259,7 +263,7 @@ export default {
             let img_file = evt.target.files[0];
             let reader = new FileReader();
 
-            if (img_file['size'] < 2111775) { //Check if the file is smaller than 2 Megs
+            if (img_file['size'] < 2111775) {
                 reader.onloadend = (img_file) => {
                     this.form.image = reader.result;
                 }
@@ -307,7 +311,7 @@ export default {
 
 <style scoped>
 
-.dashboard-content-profile {
+.dashboard-content {
   position: absolute;
   margin-right: 5px;
   width: 94.5%;

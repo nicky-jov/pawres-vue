@@ -125,6 +125,7 @@
                                 :center.sync="center"
                                 :accessToken="accessToken"
                                 :mapStyle="mapStyle"
+                                @load="onMapLoaded"
                             >
                                 <MglMarker
                                 :coordinates.sync="markerCoordinates"
@@ -257,10 +258,13 @@ import {
 } from 'vue-mapbox'
 
 export default {
+    components: {
+      MglMap
+    },
     data() {
         return {
             accessToken: 'pk.eyJ1Ijoibmlja3lqb3ZhbnVzIiwiYSI6ImNrZnFqc2Z6cTBqamUyeXBiaGNidzljOHEifQ.EmKNctj3vwr2nPn0beNhAQ',
-            mapStyle: 'mapbox://map_style',
+            mapStyle: 'mapbox://styles/mapbox/dark-v9',
             geojson: { /* … some geojson */},
             layerId: 'firstLayer',
             sourceId: 'firstSource',
@@ -271,6 +275,7 @@ export default {
                 {title: 'Sign Up', to: "/signup"},
                 {title: 'Log In', to: "/login"},
             ],
+            map: null,
         }
     },
     mounted() {
@@ -279,7 +284,25 @@ export default {
         document.head.appendChild(mapboxScript)
     },
     methods: {
-    //   ......methods of your component
+      onMapLoaded(event) {
+        // in component
+        this.map = event.map;
+        // or just to store if you want have access from other components
+        this.$store.map = event.map;
+        
+        var popup = new mapboxgl.Popup({ offset: 20 }).setText(
+        'PAWRes Headquarters is located here!'
+        );
+
+        var marker = new mapboxgl.Marker()
+          .setLngLat([110.416169, -7.779292])
+          .setPopup(popup)
+          .addTo(map);
+      },
+    },
+    created() {
+      // We need to set mapbox-gl library here in order to use it in template
+      this.mapbox = Mapbox;
     }
 }
 </script>
@@ -287,6 +310,15 @@ export default {
 <style scoped>
 body {
     overflow-y: hidden;
+}
+.mgl-map-wrapper {
+    height: 400px;
+    position: absolute;
+    right: -380px;
+    top: -175px;
+    width: 500px;
+    box-shadow: 0 0 20px 4px black;
+    border: solid;
 }
 </style>
 
