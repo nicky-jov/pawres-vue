@@ -410,6 +410,7 @@ export default {
             WinPrint.document.close();
             WinPrint.focus();
             WinPrint.print();
+            setTimeout(function(){WinPrint.close();}, 200);
         },
     },
     mounted() {

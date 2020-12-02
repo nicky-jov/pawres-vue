@@ -26,28 +26,28 @@ const router = new VueRouter({
                 {
                     path: "/profile",
                     name: "Profile",
-                    meta: {title: 'Profile'},
+                    meta: {title: 'PAWRes「プロフィル」'},
                     component: importComponent('dashboard/Profile'),
                 },
                 //Reservations
                 {
                     path: "/reservations",
                     name: "Reservations",
-                    meta: {title: 'Reservations'},
+                    meta: {title: 'PAWRes「ホテルのご予約」'},
                     component: importComponent('dashboard/Reservations'),
                 },
                 //Hotels
                 {
                     path: "/hotels",
                     name: "Hotels",
-                    meta: {title: 'Hotels'},
+                    meta: {title: 'PAWRes「ホテル管理」'},
                     component: importComponent('dashboard/Hotels'),
                 },
                 //Feasts
                 {
                     path: "/feasts",
                     name: "Feasts",
-                    meta: {title: 'Feasts'},
+                    meta: {title: 'PAWRes「ご馳走管理」'},
                     component: importComponent('dashboard/Feasts'),
                 },
             ]
@@ -81,9 +81,9 @@ const router = new VueRouter({
         },
         {
             path: '*',
-            // redirect: '/index',
-            // meta: {title: 'PAWRes「ホーム」'},
-            // component: importComponent('index'),
+            redirect: '/index',
+            meta: {title: 'PAWRes「ホーム」'},
+            component: importComponent('index'),
         },
     ],
 });
