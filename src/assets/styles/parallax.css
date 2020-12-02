@@ -420,8 +420,6 @@ pre {
   body .portfolio_home__header.work .v-list-item li {
     color: #fff;
     background: #1e1e1e00;
-    color: #fff;
-    display: flex;
   }
   body .portfolio_home__header.work .v-list-item li.active {
     border-bottom: 2px solid #ffdc25 !important;
