@@ -85,9 +85,7 @@
                     <v-spacer></v-spacer>
                     <v-btn light @click="saveImage">Upload Image</v-btn>
                 </v-card-actions>
-
-            </v-card>
-            <v-card>
+                
                 <v-card-title>
                     <span class="headline" style="font-family: Hurme !important;">Edit Profile</span>
                 </v-card-title>

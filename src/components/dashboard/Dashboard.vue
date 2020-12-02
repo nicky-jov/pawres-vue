@@ -202,8 +202,10 @@ export default {
         }
     },
     mounted() {
-        import("@/assets/js/dashnavtop.js");
-        import("@/assets/styles/dashtile.css")
+      import("@/assets/js/dashnavtop.js");
+      import("@/assets/styles/dashtile.css")
+      this.username = localStorage.getItem('username');
+      this.loadData();
     },
     watch:{
         $route (to, from){
@@ -249,10 +251,6 @@ export default {
           })
         }
     },
-    mounted() {
-      this.username = localStorage.getItem('username');
-      this.loadData();
-    }
 }
 </script>
 
