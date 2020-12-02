@@ -13,6 +13,7 @@
                 <img src="~@/assets/logo/white.png" style="transform: scale(0.45);" />
                 <v-list>
                     <v-list-item
+                        id="vnavbaritems"
                         v-for="item in items"
                         :key="item.title"
                         link
@@ -33,11 +34,11 @@
     </div>
 
     <div class="fullheight">
+    <v-progress-linear v-show="progressBar" slot="progress" color="yellow" indeterminate></v-progress-linear>
 
       <div id="navbartop">
         <div id="navbar-right">
           <div class="dropdown">
-            <v-text>
                 <img v-if="profileImage == ''"
                     src="@/assets/loading.gif"
                     class="mr-2"
@@ -46,14 +47,13 @@
                     height=40
                 />
               <img v-else
-                :src="this.$public + this.profileImage"
+                :src="this.profileImage"
                 lazy-src="~@/assets/author1.png"
                 id="avatar" 
                 width=40
                 height=40
                 class="mr-2" style="border-radius: 100%; object-fit: cover;"/>
               {{this.username}}<span>  ▼</span>
-            </v-text>
             <div class="dropdown-content">
               <a @click="dashboard"><p>Dashboard</p></a>
               <a @click="profile"><p>Account Settings</p></a>
@@ -103,6 +103,8 @@ export default {
             logoutdialog: false,
             username: 'Loading...',
             profileImage: '',
+            progressBar: true,
+            userform: new FormData,
         }
     },
     methods: {
@@ -142,6 +144,7 @@ export default {
             }).then(response => {
                 this.username = response.data.userdata.username;
                 this.profileImage = response.data.userdata.image;
+                this.userform = response.data.userdata;
             });
         },
         dashboard() {
@@ -164,10 +167,11 @@ export default {
         this.loadData();
     },
     watch:{
-        $route (to, from){
-            import("@/assets/js/dashnavtop.js")
-        }
-    },
+        userform(){
+            this.progressBar = false
+            this.loading = false
+        }    
+    }
 }
 </script>
 
@@ -175,7 +179,7 @@ export default {
 @import '~@/assets/styles/dashboard.css';
 @import '~@/assets/styles/dashnavtop.css';
 @import '~@/assets/styles/scrollbar.css';
-v-text {
+.dropdown {
     font-family: 'Hurme';
 }
 .profile-section {

@@ -10,6 +10,7 @@
 
       <div class="card mt-5 profile-section">
           <div class="card-body">
+            <v-progress-linear v-show="progressBar" slot="progress" color="green" indeterminate></v-progress-linear>
             <br>
             <br>
             <table>
@@ -19,7 +20,7 @@
                             src="@/assets/loading.gif"
                         />
                         <img id="profileImage" v-else
-                            :src="this.$public + form.profileImage"
+                            :src="form.profileImage"
                         />
                     </td>
                 </th>
@@ -174,6 +175,8 @@ export default {
             editDialog: false,
             passwordDialog: false,
             imgData: new FormData,
+            progressBar: true,
+            userform: new FormData,
         }
     },
     methods: {
@@ -188,13 +191,18 @@ export default {
                 this.form.email = response.data.userdata.email;
                 this.form.phone = response.data.userdata.phone_number;
                 this.form.verified = response.data.userdata.emmail_verified_at;
+                this.userform = response.data.userdata;
 
                 this.formEdit.username = this.form.username;
                 this.formEdit.phone = this.form.phone;
-            });
+            }).catch(error => {
+                this.error_message = error.response.data.message;
+                location.href = 'index';
+            })
         },
 
         changePassword() {
+            this.progressBar = true;
             this.$http.post(this.$api + '/change-password' , {
                 old_password: this.form.oldpassword,
                 new_password: this.form.newpassword,
@@ -211,6 +219,7 @@ export default {
                     this.form.oldpassword = '';
                     this.form.newpassword = '';
                     this.form.confirmpassword = '';
+                    this.progressBar = false;
                     this.loadData();
                 }
                 else 
@@ -224,6 +233,7 @@ export default {
         },
 
         editDetails() {
+            this.progressBar = true;
             this.$http.post(this.$api + '/change-details' , {
                 username: this.form.username,
                 phone_number: this.form.phone,
@@ -235,6 +245,7 @@ export default {
                 this.error_message=response.data.message; 
                 this.color="green";
                 this.snackbar=true;
+                this.progressBar = false;
                 this.loadData();
             }).catch(err => {
                 this.error_message=err.response.data.message;
@@ -261,6 +272,7 @@ export default {
         },
 
         saveImage() {
+            this.progressBar = true;
             this.$http.post(this.$api + '/upload-image', this.imgData, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -268,8 +280,10 @@ export default {
             }).then(response => {
                 this.error_message=response.data.message;
                 this.snackbar=true;
+                this.progressBar = false;
                 this.color="green";
                 this.loadData();
+                location.href = "profile";
             }).catch(err => {
                 this.error_message=err.response.data.message;
                 this.color="red";
@@ -282,9 +296,9 @@ export default {
         import("@/assets/js/dashnavtop.js");
     },
     watch:{
-        $route (to, from){
-            import("@/assets/js/dashnavtop.js")
-        }
+        userform(){
+            this.progressBar = false
+        }    
     },
 }
 </script>

@@ -16,7 +16,8 @@
 
         <div class="wrap ml-5">
 
-            <a @click="profile">
+            <a @click="profile"
+              data-cursor-hover>
             <div class="tile"> 
               <img draggable="false" :src='images.profile'/>
               <div class="text">
