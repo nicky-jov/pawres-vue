@@ -89,7 +89,7 @@
                     <span class="headline">Delete Confirmation</span>
                 </v-card-title>
                 <v-card-text>
-                    Confirm delete Hotel?
+                    Do you really want to delete this data?
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>

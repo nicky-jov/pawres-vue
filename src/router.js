@@ -81,9 +81,9 @@ const router = new VueRouter({
         },
         {
             path: '*',
-            redirect: '/index',
-            meta: {title: 'PAWRes「ホーム」'},
-            component: importComponent('index'),
+            // redirect: '/index',
+            // meta: {title: 'PAWRes「ホーム」'},
+            // component: importComponent('index'),
         },
     ],
 });

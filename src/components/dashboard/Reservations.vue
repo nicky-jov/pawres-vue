@@ -137,7 +137,7 @@
                     <span class="headline">Delete Confirmation</span>
                 </v-card-title>
                 <v-card-text>
-                    Confirm delete reservation?
+                    Do you really want to delete this data?
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -156,18 +156,21 @@
                 <v-card-title>
                     <span class="headline">Reservation Details</span>
                 </v-card-title>
-                <v-card-text>
-                    Transaction ID: {{editId}}
-                    Hotel Name: {{form.hotel}}
-                    Check-in Date: {{form.checkin}}
-                    Duration: {{form.duration}} night(s)
-                    Rooms: {{form.rooms}}
-                    Price: {{form.price}}
+                <v-card-text id="detailcontent">
+                    <li>Transaction ID: <span style="float: right;">{{editId}} </span></li>
+                    <li>Hotel Name: <span style="float: right;">{{form.hotel}} </span></li>
+                    <li>Check-in Date: <span style="float: right;">{{form.checkin}} </span></li>
+                    <li>Duration: <span style="float: right;">{{form.duration}} night(s) </span></li>
+                    <li>Rooms: <span style="float: right;">{{form.rooms}} </span></li>
+                    <li>Price: <span style="float: right;">Rp. {{form.price}} </span></li>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="white darken-1" text @click="dialogDetails = false">
+                    <v-btn color="red darken-1" text @click="dialogDetails = false">
                         Close
+                    </v-btn>
+                    <v-btn color="white darken-1" text @click="printDetails">
+                        Print
                     </v-btn>
                 </v-card-actions>
             </v-card>
@@ -356,7 +359,7 @@ export default {
         editHandler(item){
             this.inputType = 'Edit';
             this.editId = item.id;
-            this.form.hotel = item.hotel;
+            this.form.hotel = item.hotelname;
             this.form.checkin = item.checkin;
             this.form.duration = item.duration;
             this.form.rooms = item.rooms;
@@ -364,7 +367,7 @@ export default {
         },
         detailHandler(item){
             this.editId = item.id;
-            this.form.hotel = item.hotel;
+            this.form.hotel = item.hotelname;
             this.form.checkin = item.checkin;
             this.form.duration = item.duration;
             this.form.rooms = item.rooms;
@@ -393,6 +396,17 @@ export default {
                 duration: '',
                 rooms: '',
             };
+        },
+        printDetails() {
+            var logo = document.querySelector(".menu-inner > ul > img");
+            var prtContent = document.getElementById("detailcontent");
+            var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+            WinPrint.document.write("<h1>PawRes - Reservations</h1>")
+            WinPrint.document.write(logo.innerHTML);
+            WinPrint.document.write("<table></table>", this.form.hotel);
+            WinPrint.document.close();
+            WinPrint.focus();
+            WinPrint.print();
         },
     },
     mounted() {
