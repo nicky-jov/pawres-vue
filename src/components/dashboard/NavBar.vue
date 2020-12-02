@@ -51,7 +51,7 @@
                 id="avatar" 
                 width=40
                 height=40
-                class="mr-2" style="border-radius: 100%;"/>
+                class="mr-2" style="border-radius: 100%; object-fit: cover;"/>
               {{this.username}}<span>  ▼</span>
             </v-text>
             <div class="dropdown-content">
