@@ -9,6 +9,7 @@
         <div class="card mt-5 table-section">
             <v-card-title>
                 <v-spacer></v-spacer>
+                <v-icon @click="loadData" class="mr-5">mdi-reload</v-icon>
                 <v-btn dark @click="dialog = true; this.loadData();">
                     Add Reservation
                 </v-btn>
@@ -38,6 +39,31 @@
             </v-card>
             <br><br>
         </div>
+        <br><br>
+        
+        <h1 class="text-left ml-5" style="font-size: 50px;">
+            <font color="white">Available </font><font color=yellow>Hotels</font>
+        </h1>
+
+        <div class="wrap ml-5">
+            <div v-if="!hotels.length"> 
+                <div v-for="(item) in 4" :key="item" class="tile">
+                    <v-skeleton-loader
+                    type="image, image"
+                    ></v-skeleton-loader>
+                </div>
+            </div>
+            <div v-for="(item) in hotels" :key="item" class="tile"> 
+              <img draggable="false" :src='randomImage(item.id)'/>
+              <div class="text">
+              <h1>{{item.name}}</h1>
+              <p class="animate-text">Address: {{item.address}}</p>
+              <p class="animate-text">Contact: {{item.contact}}</p>
+              <p class="animate-text">Price per night: Rp. {{item.price}}</p>
+              </div>
+             </div>
+        </div>
+        <br><br>
         <br><br>
 
         <v-dialog v-model="dialog" persistent max-width="600px">
@@ -205,6 +231,14 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        
+        <v-flex class="text-right" style="position: fixed; bottom: 10px; right: 10px;">
+            <v-progress-circular
+            v-show="progressBar"
+            indeterminate
+            color="amber"
+            ></v-progress-circular>
+        </v-flex>
 
         <v-snackbar v-model="snackbar" :color="color" timeout="2000" top>
             {{error_message}}
@@ -494,6 +528,10 @@ export default {
             setTimeout(function () { WinPrint.print(); }, 500);
             window.onfocus = function () { setTimeout(function () { WinPrint.close(); }, 500); }
         },
+        randomImage(id) {
+            id+=2;
+            return 'http://lorempixel.com/output/nightlife-q-c-640-480-'+id+'.jpg';
+        }
     },
     mounted() {
         this.loadData();
@@ -521,6 +559,7 @@ export default {
 </script>
 
 <style scoped>
+@import '~@/assets/styles/dashtile.css';
 .dashboard-content {
     position: absolute;
     margin-right: 5px;

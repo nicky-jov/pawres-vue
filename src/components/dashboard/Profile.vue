@@ -163,6 +163,14 @@
                 </v-flex>
             </v-card>
         </v-dialog>
+        
+        <v-flex class="text-right" style="position: fixed; bottom: 10px; right: 10px;">
+            <v-progress-circular
+            v-show="progressBar"
+            indeterminate
+            color="amber"
+            ></v-progress-circular>
+        </v-flex>
 
         <v-snackbar v-model="snackbar" :color="color" timeout="2000" top>
             {{error_message}}

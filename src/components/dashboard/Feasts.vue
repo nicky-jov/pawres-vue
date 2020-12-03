@@ -13,7 +13,7 @@
       <div class="wrap" style="place-content: center; padding: 40px;">
 
         <div class="tile"> 
-          <img draggable="false" src='https://images.unsplash.com/photo-1590947132387-155cc02f3212?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80'/>
+          <img draggable="false" :src='images.A'/>
           <div class="text">
           <h1>Category A</h1>
           <h3 class="animate-text">
@@ -27,7 +27,7 @@
         
         
         <div class="tile"> 
-          <img src='https://images.unsplash.com/photo-1596699691540-ea34b062cdc0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1886&q=80'/>
+          <img draggable="false" :src="images.B"/>
           <div class="text">
           <h1>Category B</h1>
           <h3 class="animate-text">
@@ -41,7 +41,7 @@
           
 
           <div class="tile"> 
-          <img src='https://images.unsplash.com/photo-1558030006-450675393462?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1789&q=80'/>
+          <img draggable="false" :src="images.C"/>
           <div class="text">
           <h1>Category C</h1>
           <h3 class="animate-text">
@@ -58,6 +58,7 @@
         <div class="card mt-5 table-section">
             <v-card-title>
                 <v-spacer></v-spacer>
+                <v-icon @click="loadData" class="mr-5">mdi-reload</v-icon>
                 <v-btn dark @click="dialog = true; this.loadData();">
                     Add Feast
                 </v-btn>
@@ -215,6 +216,14 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        
+        <v-flex class="text-right" style="position: fixed; bottom: 10px; right: 10px;">
+            <v-progress-circular
+            v-show="progressBar"
+            indeterminate
+            color="amber"
+            ></v-progress-circular>
+        </v-flex>
 
         <v-snackbar v-model="snackbar" :color="color" timeout="2000" top>
             {{error_message}}
@@ -267,6 +276,11 @@ export default {
             menu: false,
             modal: false,
             menu2: false,
+            images: {
+                A: "https://images.unsplash.com/photo-1590947132387-155cc02f3212?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80",
+                B: "https://images.unsplash.com/photo-1596699691540-ea34b062cdc0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1886&q=80",
+                C: "https://images.unsplash.com/photo-1558030006-450675393462?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1789&q=80",
+            }
         }
     },
     methods: {

@@ -9,6 +9,7 @@
         <div class="card mt-5 table-section">
             <v-card-title>
                 <v-spacer></v-spacer>
+                <v-icon @click="loadData" class="mr-5">mdi-reload</v-icon>
                 <v-btn dark @click="dialog = true">
                     Add Hotel
                 </v-btn>
@@ -124,6 +125,14 @@
                 </v-flex>
             </v-card>
         </v-dialog>
+        
+        <v-flex class="text-right" style="position: fixed; bottom: 10px; right: 10px;">
+            <v-progress-circular
+            v-show="progressBar"
+            indeterminate
+            color="amber"
+            ></v-progress-circular>
+        </v-flex>
 
         <v-snackbar v-model="snackbar" :color="color" timeout="2000" top>
             {{error_message}}
