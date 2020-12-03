@@ -365,4 +365,7 @@ button, input, select, textarea {
     color: gray;
 }
 .center{text-align: -webkit-center;}
+.v-card, .headline {
+    font-family: 'Hurme' !important;
+}
 </style>

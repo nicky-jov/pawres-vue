@@ -458,4 +458,7 @@ export default {
 button, input, select, textarea {
     color: gray;
 }
+.v-card, .headline {
+    font-family: 'Hurme' !important;
+}
 </style>

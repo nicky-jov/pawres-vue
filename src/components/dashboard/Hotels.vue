@@ -380,5 +380,7 @@ export default {
     width: 30%;
     margin: 0 20px;
 }
-
+.v-card, .headline {
+    font-family: 'Hurme' !important;
+}
 </style>
