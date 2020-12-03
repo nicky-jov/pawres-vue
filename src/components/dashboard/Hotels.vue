@@ -338,6 +338,14 @@ export default {
     },
     created() {
         this.loadData();
+        
+        if(localStorage.getItem('username') == 'admin') {
+            this.headers.unshift({ text: "Hotel Id", value: "id" },);
+            this.headers.pop();
+            this.headers.push({text: "Created At", value: "created_at"},
+                              {text: "Updated At", value: "updated_at"},
+                              {text: "Actions", sortable: false, value: "actions"});
+        }
     },
     computed: {
       fromDateDisp() {

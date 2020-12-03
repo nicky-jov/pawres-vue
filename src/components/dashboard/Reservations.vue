@@ -370,7 +370,14 @@ export default {
                 this.progressBar = false;
                 this.inputType = 'Add';
             }).catch(error => {
-                this.error_message=error.response.data.message;
+                if(error.response.data.message.hotelname)
+                    this.error_message= this.error_message + error.response.data.message.hotelname;
+                if(error.response.data.message.checkin)
+                    this.error_message= this.error_message + '\n'  + error.response.data.message.checkin;
+                if(error.response.data.message.duration)
+                    this.error_message= this.error_message + '\n'  + error.response.data.message.duration;
+                if(error.response.data.message.rooms)
+                    this.error_message= this.error_message + '\n'  + error.response.data.message.rooms;
                 this.color="red"
                 this.snackbar=true;
                 this.progressBar = false;
@@ -400,6 +407,7 @@ export default {
             })
         },
         editHandler(item){
+            this.loadData();
             this.inputType = 'Edit';
             this.editId = item.id;
             this.form.hotel = item.hotelname;
@@ -491,7 +499,11 @@ export default {
         this.loadData();
         
         if(localStorage.getItem('username') == 'admin') {
-            this.headers.push({text: "User Id", value: "userid"});
+            this.headers.pop();
+            this.headers.push({text: "User Id", value: "userid"},
+                              {text: "Created At", value: "created_at"},
+                              {text: "Updated At", value: "updated_at"},
+                              {text: "Actions", sortable: false, value: "actions"},);
         }
     },
     computed: {

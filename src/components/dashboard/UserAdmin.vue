@@ -33,8 +33,8 @@
                     </template>
                     <template v-slot:[`item.actions`]="{ item }">
                         <v-icon class="green--text mr-2" @click="detailHandler(item)">mdi-text-box-search</v-icon>
-                        <v-icon class="blue--text mr-2" @click="editHandler(item)">mdi-pencil</v-icon>
-                        <v-icon class="red--text ml-2" @click="deleteHandler(item.id)">mdi-delete</v-icon>
+                        <v-icon v-if="item.username != 'admin'" class="blue--text mr-2" @click="editHandler(item)">mdi-pencil</v-icon>
+                        <v-icon v-if="item.username != 'admin'" class="red--text ml-2" @click="deleteHandler(item.id)">mdi-delete</v-icon>
                     </template> 
                 </v-data-table>
             </v-card>

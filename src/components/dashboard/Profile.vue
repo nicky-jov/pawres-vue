@@ -10,7 +10,6 @@
 
       <div class="card mt-5 profile-section">
           <div class="card-body">
-            <v-progress-linear v-show="progressBar" slot="progress" color="green" indeterminate></v-progress-linear>
             <br>
             <br>
             <table>
@@ -28,7 +27,8 @@
                     <td class="infobox">
                         <font color="white" size=4>
                             <h1>Account Details</h1>
-                            <hr color="grey">
+                            <v-progress-linear v-if="progressBar" v-show="progressBar" slot="progress" color="green" indeterminate></v-progress-linear>
+                            <hr color="grey" v-else>
                             <h3>
                                 Username: <span style="float: right;">{{form.username}}</span>
                             </h3>
@@ -101,6 +101,7 @@
                     <v-text-field  
                         v-model="formEdit.username"
                         label="Username"
+                        v-if="!isAdmin"
                     ></v-text-field>
                     <v-text-field  
                         v-model="formEdit.phone"
@@ -197,6 +198,7 @@ export default {
             progressBar: true,
             progressBarDialog: false,
             userform: new FormData,
+            isAdmin: false,
         }
     },
     methods: {
@@ -257,20 +259,27 @@ export default {
         editDetails() {
             this.progressBarDialog = true;
             this.$http.post(this.$api + '/change-details' , {
-                username: this.form.username,
-                phone_number: this.form.phone,
+                username: this.formEdit.username,
+                phone_number: this.formEdit.phone,
             }, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 },
             }).then(response => {
                 this.error_message=response.data.message; 
+                localStorage.removeItem('username');
+                localStorage.setItem('username', this.formEdit.username);
                 this.color="green";
                 this.snackbar=true;
                 this.progressBarDialog = false;
+                this.editDialog = false;
                 this.loadData();
             }).catch(err => {
-                this.error_message=err.response.data.message;
+                this.error_message= '';
+                if(err.response.data.message.username)
+                    this.error_message=this.error_message + err.response.data.message.username;
+                if(err.response.data.message.phone_number)
+                    this.error_message=this.error_message + '\n' + err.response.data.message.phone_number;
                 this.color="red"
                 this.snackbar=true;
                 this.progressBarDialog = false;
@@ -305,6 +314,7 @@ export default {
                 this.snackbar=true;
                 this.progressBarDialog = false;
                 this.color="green";
+                this.editDialog = false;
                 this.loadData();
                 location.href = "profile";
             }).catch(err => {
@@ -318,6 +328,9 @@ export default {
     mounted() {
         this.loadData();
         import("@/assets/js/dashnavtop.js");
+        if(localStorage.getItem('username') == "admin") {
+            this.isAdmin = true;
+        }
     },
     watch:{
         userform(){
