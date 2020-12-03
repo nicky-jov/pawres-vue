@@ -79,6 +79,10 @@
             persistent 
             max-width="600px">
             <v-card>
+                <v-card-actions class="text-right">
+                    <v-spacer></v-spacer>
+                    <v-icon color="red" @click="editDialog = false">mdi-close</v-icon>
+                </v-card-actions>
                 <v-card-title>
                     <span class="headline" style="font-family: Hurme !important;">Change Picture</span>
                 </v-card-title>
@@ -118,6 +122,10 @@
             persistent 
             max-width="600px">
             <v-card>
+                <v-card-actions class="text-right">
+                    <v-spacer></v-spacer>
+                    <v-icon color="red" @click="passwordDialog = false">mdi-close</v-icon>
+                </v-card-actions>
                 <v-card-title>
                     <span class="headline" style="font-family: Hurme !important;">Change Password</span>
                 </v-card-title>

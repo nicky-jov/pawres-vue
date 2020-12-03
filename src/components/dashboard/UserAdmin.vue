@@ -3,15 +3,12 @@
         <br><br>
         <br><br>
         <h1 class="text-left ml-5" style="font-size: 75px;">
-            <font color="white">Hotel Reservations</font>
+            <font color="white">User Management</font>
         </h1>
 
         <div class="card mt-5 table-section">
             <v-card-title>
                 <v-spacer></v-spacer>
-                <v-btn dark @click="dialog = true; this.loadData();">
-                    Add Reservation
-                </v-btn>
                 <v-text-field
                     v-model="search"
                     append-icon="mdi-magnify"
@@ -22,12 +19,17 @@
             </v-card-title>
             <v-card class="ma-6">
                 <v-data-table :headers="headers" 
-                    :items="reservations" 
+                    :items="users" 
                     :loading="loading"
                     :search="search">
                     <v-progress-linear v-show="progressBar" slot="progress" color="red" indeterminate></v-progress-linear>
-                    <template v-slot:[`item.duration`]="{ item }">
-                        {{item.duration}} night(s)
+                    <template v-slot:[`item.image`]="{ item }">
+                        <img id="profileImage"
+                            :src="item.image"
+                            width=40
+                            height=40
+                            style="border-radius: 100%; object-fit: cover;"
+                        />
                     </template>
                     <template v-slot:[`item.actions`]="{ item }">
                         <v-icon class="green--text mr-2" @click="detailHandler(item)">mdi-text-box-search</v-icon>
@@ -184,23 +186,26 @@
                     </v-flex>
                 </v-card-actions>
                 <v-card-title>
-                    <span class="headline">Reservation Details</span>
+                    <span class="headline">User Details</span>
                 </v-card-title>
+                <v-card-text class="text-center">
+                    <img id="profileImage"
+                        :src="form.image"
+                        width=200
+                        height=200
+                        style="border-radius: 100%; object-fit: cover;"
+                    />
+                </v-card-text>
                 <v-card-text>
-                    <li>Transaction ID: <span style="float: right;">{{editId}} </span></li>
-                    <li>Hotel Name: <span style="float: right;">{{form.hotel}} </span></li>
-                    <li>Check-in Date: <span style="float: right;">{{form.checkin}} </span></li>
-                    <li>Duration: <span style="float: right;">{{form.duration}} night(s) </span></li>
-                    <li>Rooms: <span style="float: right;">{{form.rooms}} </span></li>
-                    <li>Price: <span style="float: right;">Rp. {{form.price}} </span></li>
+                    <li>User ID: <span style="float: right;">{{editId}} </span></li>
+                    <li>Username: <span style="float: right;">{{form.username}} </span></li>
+                    <li>Verified At: <span style="float: right;">{{form.verified_at}} </span></li>
+                    <li>Registered At: <span style="float: right;">{{form.created_at}} </span></li>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="red darken-1" text @click="dialogDetails = false">
+                    <v-btn color="white darken-1" text @click="dialogDetails = false">
                         Close
-                    </v-btn>
-                    <v-btn color="white darken-1" text @click="printDetails">
-                        Print
                     </v-btn>
                 </v-card-actions>
             </v-card>
@@ -218,8 +223,7 @@ export default {
     data() {
         return {
             search: '',
-            reservations: [],
-            reservation: new FormData,
+            users: [],
             hotels: [],
             userform: new FormData,
             username: '',
@@ -233,22 +237,21 @@ export default {
             error_message: '',
             formTitle: '',
             headers: [
-                { text: "Transaction ID",
+                { text: "User Id",
                     align: "start",
                     sortable: true,
                     value: "id" },
-                { text: "Hotel Name", value: "hotelname" },
-                { text: "Check-in", value: "checkin" },
-                { text: "Duration", value: "duration" },
-                { text: "Rooms", value: "rooms" },
+                { text: "Image", value: "image" },
+                { text: "Username", value: "username" },
+                { text: "Verified At", value: "email_verified_at" },
+                { text: "Registration Date", value: "created_at" },
                 { text: "Actions", value: "actions" },
             ],
             form: {
-                hotel: '',
-                checkin: '',
-                duration: '',
-                rooms: '',
-                price: '',
+                image: '',
+                username: '',
+                email_verified_at: '',
+                created_at: '',
             },
             inputType: 'Add',
             progressBar: true,
@@ -269,34 +272,18 @@ export default {
         },
         loadData() {
             this.progressBar = true;
-            var url;
-
-            if(localStorage.getItem('username') == 'admin') {
-                this.headers.push({text: "User Id", value: "userid"});
-                url = this.$api + '/reservations/admin'
-            } 
-            else
-                url = this.$api + '/reservations'
+            var url = this.$api + '/users/admin'
 
             this.$http.get(url, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 } 
             }).then(response => {
-                this.reservations = response.data.data;
+                this.users = response.data.users;
                 
             }).catch(()=> {
                 this.progressBar = false;
                 this.loading = false;
-            });
-
-            var url2 = this.$api + '/hotels'
-            this.$http.get(url2, {
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token')
-                } 
-            }).then(response => {
-                this.hotels = response.data.data;
             });
 
             this.$http.get(this.$api + '/userdata', {
@@ -312,108 +299,107 @@ export default {
             })
         },
         save() {
-            this.progressBar = true;
-            this.reservation.append('hotelname', this.form.hotel);
-            this.reservation.append('checkin', this.date);
-            this.reservation.append('duration', this.form.duration);
-            this.reservation.append('rooms', this.form.rooms);
-            this.error_message='';
+            // this.progressBar = true;
+            // this.reservation.append('hotelname', this.form.hotel);
+            // this.reservation.append('checkin', this.date);
+            // this.reservation.append('duration', this.form.duration);
+            // this.reservation.append('rooms', this.form.rooms);
+            // this.error_message='';
 
-            var url = this.$api + '/reservations'
-            this.$http.post(url, this.reservation, {
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token')
-                }
-            }).then(response => {
-                this.error_message=response.data.message;
-                this.color="green"
-                this.snackbar=true;
-                this.close();
-                this.loadData();
-                this.progressBar = false;
-                this.resetForm();
-            }).catch(error => {
-                if(error.response.data.message.hotelname)
-                    this.error_message= this.error_message + error.response.data.message.hotelname;
-                if(error.response.data.message.checkin)
-                    this.error_message= this.error_message + '\n'  + error.response.data.message.checkin;
-                if(error.response.data.message.duration)
-                    this.error_message= this.error_message + '\n'  + error.response.data.message.duration;
-                if(error.response.data.message.rooms)
-                    this.error_message= this.error_message + '\n'  + error.response.data.message.rooms;
-                this.color="red"
-                this.snackbar=true;
-                this.progressBar = false;
-            })
+            // var url = this.$api + '/reservations'
+            // this.$http.post(url, this.reservation, {
+            //     headers: {
+            //         'Authorization': 'Bearer ' + localStorage.getItem('token')
+            //     }
+            // }).then(response => {
+            //     this.error_message=response.data.message;
+            //     this.color="green"
+            //     this.snackbar=true;
+            //     this.close();
+            //     this.loadData();
+            //     this.progressBar = false;
+            //     this.resetForm();
+            // }).catch(error => {
+            //     if(error.response.data.message.hotelname)
+            //         this.error_message= this.error_message + error.response.data.message.hotelname;
+            //     if(error.response.data.message.checkin)
+            //         this.error_message= this.error_message + '\n'  + error.response.data.message.checkin;
+            //     if(error.response.data.message.duration)
+            //         this.error_message= this.error_message + '\n'  + error.response.data.message.duration;
+            //     if(error.response.data.message.rooms)
+            //         this.error_message= this.error_message + '\n'  + error.response.data.message.rooms;
+            //     this.color="red"
+            //     this.snackbar=true;
+            //     this.progressBar = false;
+            // })
         },
         update() {
-            this.progressBar = true;
-            let newData = {
-                hotelname: this.form.hotel,
-                checkin: this.form.checkin,
-                duration: this.form.duration,
-                rooms: this.form.rooms,
-            }
-            var url = this.$api + '/reservations/' + this.editId;
-            this.$http.put(url, newData, {
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token')
-                }
-            }).then(response => {
-                this.error_message=response.data.message;
-                this.color="green"
-                this.snackbar=true;
-                this.close();
-                this.loadData();
-                this.resetForm();
-                this.progressBar = false;
-                this.inputType = 'Add';
-            }).catch(error => {
-                this.error_message=error.response.data.message;
-                this.color="red"
-                this.snackbar=true;
-                this.progressBar = false;
-            }) 
+            // this.progressBar = true;
+            // let newData = {
+            //     hotelname: this.form.hotel,
+            //     checkin: this.form.checkin,
+            //     duration: this.form.duration,
+            //     rooms: this.form.rooms,
+            // }
+            // var url = this.$api + '/reservations/' + this.editId;
+            // this.$http.put(url, newData, {
+            //     headers: {
+            //         'Authorization': 'Bearer ' + localStorage.getItem('token')
+            //     }
+            // }).then(response => {
+            //     this.error_message=response.data.message;
+            //     this.color="green"
+            //     this.snackbar=true;
+            //     this.close();
+            //     this.loadData();
+            //     this.resetForm();
+            //     this.progressBar = false;
+            //     this.inputType = 'Add';
+            // }).catch(error => {
+            //     this.error_message=error.response.data.message;
+            //     this.color="red"
+            //     this.snackbar=true;
+            //     this.progressBar = false;
+            // }) 
         },
         deleteData() {
-            this.progressBar = true;
-            var url = this.$api + '/reservations/' + this.deleteId;
-            this.$http.delete(url, {
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token')
-                }
-            }).then(response => {
-                this.error_message=response.data.message;
-                this.color="green"
-                this.snackbar=true;
-                this.close();
-                this.loadData();
-                this.resetForm();
-                this.progressBar = false;
-                this.inputType = 'Add';
-            }).catch(error => {
-                this.error_message=error.response.data.message;
-                this.color="red"
-                this.snackbar=true;
-                this.progressBar = false;
-            })
+            // this.progressBar = true;
+            // var url = this.$api + '/reservations/' + this.deleteId;
+            // this.$http.delete(url, {
+            //     headers: {
+            //         'Authorization': 'Bearer ' + localStorage.getItem('token')
+            //     }
+            // }).then(response => {
+            //     this.error_message=response.data.message;
+            //     this.color="green"
+            //     this.snackbar=true;
+            //     this.close();
+            //     this.loadData();
+            //     this.resetForm();
+            //     this.progressBar = false;
+            //     this.inputType = 'Add';
+            // }).catch(error => {
+            //     this.error_message=error.response.data.message;
+            //     this.color="red"
+            //     this.snackbar=true;
+            //     this.progressBar = false;
+            // })
         },
         editHandler(item){
             this.inputType = 'Edit';
             this.editId = item.id;
-            this.form.hotel = item.hotelname;
-            this.form.checkin = item.checkin;
-            this.form.duration = item.duration;
-            this.form.rooms = item.rooms;
+            this.form.image = item.image;
+            this.form.username = item.username;
+            this.form.verified_at = item.email_verified_at;
+            this.form.created_at = item.created_at;
             this.dialog = true;
         },
         detailHandler(item){
             this.editId = item.id;
-            this.form.hotel = item.hotelname;
-            this.form.checkin = item.checkin;
-            this.form.duration = item.duration;
-            this.form.rooms = item.rooms;
-            this.form.price = item.price;
+            this.form.image = item.image;
+            this.form.username = item.username;
+            this.form.verified_at = item.email_verified_at;
+            this.form.created_at = item.created_at;
             this.dialogDetails = true;
         },
         deleteHandler(id){
@@ -439,63 +425,12 @@ export default {
                 rooms: '',
             };
         },
-        printDetails() {
-            var today = new Date();
-            var dd = String(today.getDate()).padStart(2, '0');
-            var mm = String(today.getMonth() + 1).padStart(2, '0');
-            var yyyy = today.getFullYear();
-            today = mm + '/' + dd + '/' + yyyy;
-            var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
-            WinPrint.document.write(`
-            <div style="width: 100%; text-align: -webkit-center; font-family: system-ui;">
-            <div style="width: 100%; height: 100%; box-shadow: 0 0 0 2px #7c7c7c;">
-            <br><div style="float: left;"><img src="https://pawres.s3.us-east-2.amazonaws.com/logo-black.png" 
-            style="height: 50px; margin-left: 50px;"/></div>
-            <br><br><br>
-            <h1>PawRes - Reservation Details</h1><hr width="84%" color="black">
-            <br><div style="width: 80vw; text-align: left;">
-            Username: `,this.username,`
-            <span style="float: right;">Transaction ID: `,this.editId, `<br>
-            Date: `, today, `</span></div><br><br>
-            <table border="0" cellpadding="10" style="width: 80vw;" >
-            <tbody style="border: none;">
-                <tr>
-                    <th style="text-align: left;">Hotel Name:</th>
-                    <td style="text-align: right;">`, this.form.hotel,`</td>
-                </tr>
-                <tr>
-                    <th style="text-align: left;">Check-in Date:</th>
-                    <td style="text-align: right;">`, this.form.checkin,`</td>
-                </tr>
-                <tr>
-                    <th style="text-align: left;">Duration:</th>
-                    <td style="text-align: right;">`, this.form.duration ,` nights</td>
-                </tr>
-                <tr>
-                    <th style="text-align: left;">Rooms:</th>
-                    <td style="text-align: right;">`, this.form.rooms, `</td>
-                </tr>
-                <tr>
-                    <th style="text-align: left;">Price:</th>
-                    <td style="text-align: right;"> Rp. `, this.form.price, `</td>
-                </tr>
-            </tbody></table><br><br></div></div>`);
-            WinPrint.document.close();
-            WinPrint.focus();
-            setTimeout(function () { WinPrint.print(); }, 500);
-            window.onfocus = function () { setTimeout(function () { WinPrint.close(); }, 500); }
-        },
     },
     mounted() {
         this.loadData();
     },
-    computed: {
-      fromDateDisp() {
-        return this.fromDateVal;
-      },
-    },
     watch:{
-        reservations(){
+        users(){
             this.progressBar = false
             this.loading = false
         }    

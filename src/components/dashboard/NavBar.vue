@@ -168,6 +168,10 @@ export default {
                 this.profileImage = response.data.userdata.image;
                 this.userform = response.data.userdata;
             });
+
+            if(localStorage.getItem('username') == 'admin') {
+                this.items.push({title: "User Management", to: "/useradmin"});
+            }
         },
         dashboard() {
             this.$router.push({

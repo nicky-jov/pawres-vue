@@ -50,6 +50,12 @@ const router = new VueRouter({
                     meta: {title: 'PAWRes「ご馳走管理」'},
                     component: importComponent('dashboard/Feasts'),
                 },
+                {
+                    path: "/useradmin",
+                    name: "Users",
+                    meta: {title: 'PAWRes「ユーザー管理」'},
+                    component: importComponent('dashboard/UserAdmin'),
+                },
             ]
         },
         {
