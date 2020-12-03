@@ -154,7 +154,9 @@ export default {
                 { text: "Contact", value: "contact" },
                 { text: "Rooms", value: "rooms" },
                 { text: "Price per night", value: "price" },
-                { text: "Actions", value: "actions" },
+                { text: "Actions",
+                    sortable: false,
+                    value: "actions" },
             ],
             form: {
                 name: '',

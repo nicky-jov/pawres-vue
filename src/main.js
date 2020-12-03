@@ -7,8 +7,8 @@ import axios from 'axios'
 Vue.config.productionTip = false
 
 Vue.prototype.$http = axios;
-Vue.prototype.$api = 'https://floating-wave-43517.herokuapp.com/api'
-Vue.prototype.$public = 'https://floating-wave-43517.herokuapp.com'
+Vue.prototype.$api = 'https://floating-wave-43517.herokuapp.com/api' //hosted api
+Vue.prototype.$public = 'https://floating-wave-43517.herokuapp.com' //hosted html
 
 global.jQuery = require('jquery');
 var $ = global.jQuery;

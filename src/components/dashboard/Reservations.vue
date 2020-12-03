@@ -241,7 +241,9 @@ export default {
                 { text: "Check-in", value: "checkin" },
                 { text: "Duration", value: "duration" },
                 { text: "Rooms", value: "rooms" },
-                { text: "Actions", value: "actions" },
+                { text: "Actions",
+                    sortable: false,
+                    value: "actions" },
             ],
             form: {
                 hotel: '',
@@ -272,7 +274,6 @@ export default {
             var url;
 
             if(localStorage.getItem('username') == 'admin') {
-                this.headers.push({text: "User Id", value: "userid"});
                 url = this.$api + '/reservations/admin'
             } 
             else
@@ -488,6 +489,10 @@ export default {
     },
     mounted() {
         this.loadData();
+        
+        if(localStorage.getItem('username') == 'admin') {
+            this.headers.push({text: "User Id", value: "userid"});
+        }
     },
     computed: {
       fromDateDisp() {

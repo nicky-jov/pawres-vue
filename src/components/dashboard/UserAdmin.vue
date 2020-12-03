@@ -60,71 +60,37 @@
                         <v-text-field 
                             v-if="inputType != 'Add'"
                             v-model="editId"
-                            label="Transaction ID"
+                            label="User ID"
                             outlined
                             disabled
                         ></v-text-field>
-                        <v-select
-                            v-model="form.hotel"
-                            label="Hotel Name"
-                            :items="hotels"
-                            item-text="name"
-                            outlined
-                            three-line
-                            :value="form.hotel"
-                        >
-                        </v-select>
-                        <v-menu
-                            ref="menu"
-                            v-model="menu"
-                            :close-on-content-click="false"
-                            :return-value.sync="date"
-                            transition="scale-transition"
-                            offset-y
-                            min-width="290px"
-                        >
-                            <template v-slot:activator="{ on, attrs }">
-                            <v-text-field
-                                v-model="date"
-                                label="Check-in"
-                                prepend-icon="mdi-calendar"
-                                readonly
-                                outlined
-                                v-bind="attrs"
-                                v-on="on"
-                            ></v-text-field>
-                            </template>
-                            <v-date-picker
-                                v-model="date"
-                                no-title
-                                scrollable
-                            >
+                        <v-card-actions>
+                            <input class="ml-15" type="file" label="File" placeholder="Select file here..." @change='upload_image'>
+                        </v-card-actions>
+                        <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn
-                                text
-                                color="primary"
-                                @click="menu = false"
-                            >
-                                Cancel
-                            </v-btn>
-                            <v-btn
-                                text
-                                color="primary"
-                                @click="$refs.menu.save(date)"
-                            >
-                                OK
-                            </v-btn>
-                            </v-date-picker>
-                        </v-menu>
+                            <v-btn light @click="saveImage">Upload Image</v-btn>
+                        </v-card-actions>
+                        <br>
                         <v-text-field
-                            label="Duration"
-                            v-model="form.duration"
-                            suffix="night(s)"
+                            label="Username"
+                            v-model="form.username"
                             outlined
                         ></v-text-field>
                         <v-text-field
-                            label="Rooms"
-                            v-model="form.rooms"
+                            label="E-mail Address"
+                            v-model="form.email"
+                            outlined
+                        ></v-text-field>
+                        <v-text-field
+                            label="Phone Number"
+                            v-model="form.phone_number"
+                            outlined
+                        ></v-text-field>
+                        <v-text-field
+                            label="Password"
+                            type="password"
+                            v-model="form.password"
                             outlined
                         ></v-text-field>
                     </v-container>
@@ -193,12 +159,13 @@
                         :src="form.image"
                         width=200
                         height=200
-                        style="border-radius: 100%; object-fit: cover;"
+                        style="border-radius: 100%; object-fit: cover; border: solid 3px white;"
                     />
                 </v-card-text>
                 <v-card-text>
                     <li>User ID: <span style="float: right;">{{editId}} </span></li>
                     <li>Username: <span style="float: right;">{{form.username}} </span></li>
+                    <li>Phone Number: <span style="float: right;">{{form.phone_number}} </span></li>
                     <li>Verified At: <span style="float: right;">{{form.verified_at}} </span></li>
                     <li>Registered At: <span style="float: right;">{{form.created_at}} </span></li>
                 </v-card-text>
@@ -226,6 +193,7 @@ export default {
             users: [],
             hotels: [],
             userform: new FormData,
+            imgData: new FormData,
             username: '',
             deleteId: '',
             editId: '',
@@ -243,15 +211,21 @@ export default {
                     value: "id" },
                 { text: "Image", value: "image" },
                 { text: "Username", value: "username" },
+                { text: "E-mail Address", value: "email" },
+                { text: "Phone Number", value: "phone_number" },
                 { text: "Verified At", value: "email_verified_at" },
                 { text: "Registration Date", value: "created_at" },
-                { text: "Actions", value: "actions" },
+                { text: "Actions",
+                    sortable: false,
+                    value: "actions" },
             ],
             form: {
                 image: '',
                 username: '',
+                phone_number: '',
                 email_verified_at: '',
                 created_at: '',
+                password: '',
             },
             inputType: 'Add',
             progressBar: true,
@@ -271,6 +245,12 @@ export default {
             }
         },
         loadData() {
+            if(localStorage.getItem('username') != 'admin') {
+                this.$router.push({
+                    name: 'Dashboard',
+                })
+            }
+
             this.progressBar = true;
             var url = this.$api + '/users/admin'
 
@@ -298,98 +278,101 @@ export default {
                 location.href = 'index';
             })
         },
-        save() {
-            // this.progressBar = true;
-            // this.reservation.append('hotelname', this.form.hotel);
-            // this.reservation.append('checkin', this.date);
-            // this.reservation.append('duration', this.form.duration);
-            // this.reservation.append('rooms', this.form.rooms);
-            // this.error_message='';
-
-            // var url = this.$api + '/reservations'
-            // this.$http.post(url, this.reservation, {
-            //     headers: {
-            //         'Authorization': 'Bearer ' + localStorage.getItem('token')
-            //     }
-            // }).then(response => {
-            //     this.error_message=response.data.message;
-            //     this.color="green"
-            //     this.snackbar=true;
-            //     this.close();
-            //     this.loadData();
-            //     this.progressBar = false;
-            //     this.resetForm();
-            // }).catch(error => {
-            //     if(error.response.data.message.hotelname)
-            //         this.error_message= this.error_message + error.response.data.message.hotelname;
-            //     if(error.response.data.message.checkin)
-            //         this.error_message= this.error_message + '\n'  + error.response.data.message.checkin;
-            //     if(error.response.data.message.duration)
-            //         this.error_message= this.error_message + '\n'  + error.response.data.message.duration;
-            //     if(error.response.data.message.rooms)
-            //         this.error_message= this.error_message + '\n'  + error.response.data.message.rooms;
-            //     this.color="red"
-            //     this.snackbar=true;
-            //     this.progressBar = false;
-            // })
-        },
         update() {
-            // this.progressBar = true;
-            // let newData = {
-            //     hotelname: this.form.hotel,
-            //     checkin: this.form.checkin,
-            //     duration: this.form.duration,
-            //     rooms: this.form.rooms,
-            // }
-            // var url = this.$api + '/reservations/' + this.editId;
-            // this.$http.put(url, newData, {
-            //     headers: {
-            //         'Authorization': 'Bearer ' + localStorage.getItem('token')
-            //     }
-            // }).then(response => {
-            //     this.error_message=response.data.message;
-            //     this.color="green"
-            //     this.snackbar=true;
-            //     this.close();
-            //     this.loadData();
-            //     this.resetForm();
-            //     this.progressBar = false;
-            //     this.inputType = 'Add';
-            // }).catch(error => {
-            //     this.error_message=error.response.data.message;
-            //     this.color="red"
-            //     this.snackbar=true;
-            //     this.progressBar = false;
-            // }) 
+            this.progressBar = true;
+            let newData = {
+                username: this.form.username,
+                email: this.form.email,
+                phone_number: this.form.phone_number,
+                password: this.form.password,
+            }
+            var url = this.$api + '/updatebyid/' + this.editId;
+            this.$http.put(url, newData, {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            }).then(response => {
+                this.error_message=response.data.message;
+                this.color="green"
+                this.snackbar=true;
+                this.close();
+                this.loadData();
+                this.resetForm();
+                this.progressBar = false;
+                this.inputType = 'Add';
+            }).catch(error => {
+                this.error_message=error.response.data.message;
+                this.color="red"
+                this.snackbar=true;
+                this.progressBar = false;
+            });
         },
         deleteData() {
-            // this.progressBar = true;
-            // var url = this.$api + '/reservations/' + this.deleteId;
-            // this.$http.delete(url, {
-            //     headers: {
-            //         'Authorization': 'Bearer ' + localStorage.getItem('token')
-            //     }
-            // }).then(response => {
-            //     this.error_message=response.data.message;
-            //     this.color="green"
-            //     this.snackbar=true;
-            //     this.close();
-            //     this.loadData();
-            //     this.resetForm();
-            //     this.progressBar = false;
-            //     this.inputType = 'Add';
-            // }).catch(error => {
-            //     this.error_message=error.response.data.message;
-            //     this.color="red"
-            //     this.snackbar=true;
-            //     this.progressBar = false;
-            // })
+            this.progressBar = true;
+            var url = this.$api + '/deletebyid/' + this.deleteId;
+            this.$http.delete(url, {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            }).then(response => {
+                this.error_message=response.data.message;
+                this.color="green"
+                this.snackbar=true;
+                this.close();
+                this.loadData();
+                this.resetForm();
+                this.progressBar = false;
+                this.inputType = 'Add';
+            }).catch(error => {
+                this.error_message=error.response.data.message;
+                this.color="red"
+                this.snackbar=true;
+                this.progressBar = false;
+            })
+        },
+
+        upload_image(evt){
+            let img_file = evt.target.files[0];
+            let reader = new FileReader();
+
+            if (img_file['size'] < 2111775) {
+                reader.onloadend = (img_file) => {
+                    this.form.image = reader.result;
+                }
+                this.imgData.append("image", img_file);
+                reader.readAsDataURL(img_file);
+            } else {
+                this.error_message="File cannot be larger than 2MB";
+                this.color="red";
+                this.snackbar=true;
+            }
+        },
+        saveImage() {
+            this.progressBarDialog = true;
+            this.$http.post(this.$api + '/imagebyid/' + this.editId, this.imgData, {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+            }).then(response => {
+                this.error_message=response.data.message;
+                this.snackbar=true;
+                this.progressBarDialog = false;
+                this.color="green";
+                this.loadData();
+            }).catch(err => {
+                this.error_message=err.response.data.message;
+                this.color="red";
+                this.snackbar=true;
+                this.progressBarDialog = false;
+            });
         },
         editHandler(item){
             this.inputType = 'Edit';
             this.editId = item.id;
             this.form.image = item.image;
             this.form.username = item.username;
+            this.form.email = item.email;
+            this.form.phone_number = item.phone_number;
             this.form.verified_at = item.email_verified_at;
             this.form.created_at = item.created_at;
             this.dialog = true;
@@ -398,6 +381,8 @@ export default {
             this.editId = item.id;
             this.form.image = item.image;
             this.form.username = item.username;
+            this.form.email = item.email;
+            this.form.phone_number = item.phone_number;
             this.form.verified_at = item.email_verified_at;
             this.form.created_at = item.created_at;
             this.dialogDetails = true;
@@ -419,10 +404,12 @@ export default {
         },
         resetForm() {
             this.form = {
-                hotel: '',
-                checkin: '',
-                duration: '',
-                rooms: '',
+                image: '',
+                username: '',
+                phone_number: '',
+                email_verified_at: '',
+                created_at: '',
+                password: '',
             };
         },
     },
@@ -456,6 +443,9 @@ export default {
     border-radius: 20px;
     box-shadow: 15px 15px 0px 0px #383838;
 }
+.v-card { 
+    font-family: 'Hurme';
+}
 .center{text-align: -webkit-center;}
 #search, #add{
     float: right;
@@ -464,5 +454,8 @@ export default {
 #search { 
     width: 30%;
     margin: 0 20px;
+}
+button, input, select, textarea {
+    color: gray;
 }
 </style>
