@@ -1,5 +1,6 @@
 <template>
     <div class="content-signup">
+        <v-progress-linear v-show="progressBar" slot="progress" color="purple" indeterminate></v-progress-linear>
         <div class='portfolio mb-20'>
             <div class='page_portfolioz'>
                 <div class='portfolio_home__header'>
@@ -94,10 +95,12 @@ export default {
                 phone: [ (v) => !!v || 'Phone Number is empty',],
                 password: [ (v) => !!v || 'Password is empty',],
             },
+            progressBar: false,
         }
     },
     methods: {
         register() {
+            this.progressBar = true;
             if (this.$refs.form.validate()) { 
                 this.error_message = ''
                 this.$http.post(this.$api + '/register', {
@@ -109,7 +112,7 @@ export default {
                     this.error_message=response.data.message; 
                     this.color="green"
                     this.snackbar=true;
-                    this.load = false;
+                    this.progressBar = false;
                     this.clear();
                 }).catch(error => {
                     if (error.response.data.message.username)
@@ -122,6 +125,7 @@ export default {
                         this.error_message=this.error_message + '\n' + error.response.data.message.password;
                     this.color="red"
                     this.snackbar=true;
+                    this.progressBar = false;
                 })
             }
         },

@@ -208,16 +208,16 @@ pre {
   body .portfolio_home__work.expand .slideClone img {
     -webkit-transition: all 0.8s 0.23s cubic-bezier(0.79, -0.01, 0, 0.99);
     transition: all 0.8s 0.23s cubic-bezier(0.79, -0.01, 0, 0.99);
-    -webkit-transform: scale(2.9);
-            transform: scale(2.9);
+    -webkit-transform: scale(3.26);
+            transform: scale(3.26);
   }
   body .portfolio_home__work.expand .slideClone .overlay {
     -webkit-transition: opacity 0.1s, -webkit-transform 0.8s 0.23s cubic-bezier(0.79, -0.01, 0, 0.99);
     transition: opacity 0.1s, -webkit-transform 0.8s 0.23s cubic-bezier(0.79, -0.01, 0, 0.99);
     transition: opacity 0.1s, transform 0.8s 0.23s cubic-bezier(0.79, -0.01, 0, 0.99);
     transition: opacity 0.1s, transform 0.8s 0.23s cubic-bezier(0.79, -0.01, 0, 0.99), -webkit-transform 0.8s 0.23s cubic-bezier(0.79, -0.01, 0, 0.99);
-    -webkit-transform: scale(2.9);
-            transform: scale(2.9);
+    -webkit-transform: scale(3.26);
+            transform: scale(3.26);
   }
   body .portfolio_home__work.expand .slideClone .title.f {
     position: relative;
