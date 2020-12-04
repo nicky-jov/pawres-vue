@@ -225,8 +225,8 @@
             ></v-progress-circular>
         </v-flex>
 
-        <v-snackbar v-model="snackbar" :color="color" timeout="2000" top>
-            {{error_message}}
+        <v-snackbar v-model="snackbar" :color="color" timeout="3000" top>
+            <pre>{{error_message}}</pre>
         </v-snackbar>
     </div>
 </template>
