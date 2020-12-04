@@ -18,6 +18,7 @@
                         <img id="profileImage" v-if="form.profileImage == ''"
                             src="@/assets/loading.gif"
                         />
+                        <!-- TODO Image -->
                         <img id="profileImage" v-else
                             :src="form.profileImage"
                         />
@@ -27,7 +28,7 @@
                     <td class="infobox">
                         <font color="white" size=4>
                             <h1>Account Details</h1>
-                            <v-progress-linear v-if="progressBar" v-show="progressBar" slot="progress" color="green" indeterminate></v-progress-linear>
+                            <v-progress-linear v-if="progressBar" v-show="progressBar" slot="progress" color="grey" indeterminate></v-progress-linear>
                             <hr color="grey" v-else>
                             <h3>
                                 Username: <span style="float: right;">{{form.username}}</span>
@@ -164,7 +165,7 @@
             </v-card>
         </v-dialog>
         
-        <v-flex class="text-right" style="position: fixed; bottom: 10px; right: 10px;">
+        <v-flex class="text-right" style="position: fixed; bottom: 20px; right: 20px;">
             <v-progress-circular
             v-show="progressBar"
             indeterminate

@@ -10,6 +10,9 @@ Vue.prototype.$http = axios;
 Vue.prototype.$api = 'https://floating-wave-43517.herokuapp.com/api' //hosted api
 Vue.prototype.$public = 'https://floating-wave-43517.herokuapp.com' //hosted html
 
+// Vue.prototype.$api = 'http://127.0.0.1:8000/api' //served api
+// Vue.prototype.$public = 'http://127.0.0.1:8000' //served html
+
 global.jQuery = require('jquery');
 var $ = global.jQuery;
 window.$ = $;

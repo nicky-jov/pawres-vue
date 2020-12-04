@@ -24,6 +24,7 @@
                     :search="search">
                     <v-progress-linear v-show="progressBar" slot="progress" color="red" indeterminate></v-progress-linear>
                     <template v-slot:[`item.image`]="{ item }">
+                        <!-- TODO Image -->
                         <img id="profileImage"
                             :src="item.image"
                             width=40
@@ -178,7 +179,7 @@
             </v-card>
         </v-dialog>
         
-        <v-flex class="text-right" style="position: fixed; bottom: 10px; right: 10px;">
+        <v-flex class="text-right" style="position: fixed; bottom: 20px; right: 20px;">
             <v-progress-circular
             v-show="progressBar"
             indeterminate

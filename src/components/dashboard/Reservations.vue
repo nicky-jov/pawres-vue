@@ -45,23 +45,26 @@
             <font color="white">Available </font><font color=yellow>Hotels</font>
         </h1>
 
-        <div class="wrap ml-5">
-            <div v-if="!hotels.length"> 
-                <div v-for="(item) in 4" :key="item" class="tile">
+        <div class="ml-10">
+            <div class="wrap ml-5" v-if="!hotels.length">
+                <div v-for="(item, i) in 8" :key="i" class="tile">
                     <v-skeleton-loader
                     type="image, image"
                     ></v-skeleton-loader>
                 </div>
             </div>
-            <div v-for="(item) in hotels" :key="item" class="tile"> 
-              <img draggable="false" :src='randomImage(item.id)'/>
-              <div class="text">
-              <h1>{{item.name}}</h1>
-              <p class="animate-text">Address: {{item.address}}</p>
-              <p class="animate-text">Contact: {{item.contact}}</p>
-              <p class="animate-text">Price per night: Rp. {{item.price}}</p>
-              </div>
-             </div>
+
+            <div class="wrap ml-5" v-else>
+                <div v-for="(item, x) in hotels" :key="x" class="tile"> 
+                <img draggable="false" :src='randomImage(item.id)'/>
+                <div class="text">
+                <h1>{{item.name}}</h1>
+                <p class="animate-text">Address: {{item.address}}</p>
+                <p class="animate-text">Contact: {{item.contact}}</p>
+                <p class="animate-text">Price per night: Rp. {{item.price}}</p>
+                </div>
+                </div>
+            </div>
         </div>
         <br><br>
         <br><br>
@@ -232,7 +235,7 @@
             </v-card>
         </v-dialog>
         
-        <v-flex class="text-right" style="position: fixed; bottom: 10px; right: 10px;">
+        <v-flex class="text-right" style="position: fixed; bottom: 20px; right: 20px;">
             <v-progress-circular
             v-show="progressBar"
             indeterminate
@@ -553,7 +556,12 @@ export default {
         reservations(){
             this.progressBar = false
             this.loading = false
-        }    
+        },
+        hotels: function(val) {
+          if (val) {
+              this.loadData();
+          }
+        }
     }
 }
 </script>

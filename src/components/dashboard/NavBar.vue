@@ -46,6 +46,7 @@
                     width=40
                     height=40
                 />
+                <!-- TODO Image -->
               <img v-else
                 :src="this.profileImage"
                 lazy-src="~@/assets/author1.png"
@@ -66,6 +67,10 @@
       <keep-alive>
         <router-view></router-view>
       </keep-alive>
+        <div :class="[ 'g-cursor', { 'g-cursor_hover': hover }, {'g-cursor_hide': hideCursor} ]">
+            <div :style="cursorCircle" class="g-cursor__circle"></div>
+            <div class="g-cursor__point" ref="point" :style="cursorPoint"></div>
+        </div>
     </div>
     
     <v-dialog v-model="logoutdialog" persistent max-width="600px">
@@ -111,6 +116,12 @@ export default {
             progressBar: true,
             progressBarLogout: false,
             userform: new FormData,
+            xChild: 0,
+            yChild: 0,
+            xParent: 0,
+            yParent: 0,
+            hover: false,
+            hideCursor: true
         }
     },
     methods: {
@@ -182,6 +193,14 @@ export default {
             this.$router.push({
                 name: "Profile",
             });
+        },
+        moveCursor(e) {
+            this.xChild = e.clientX;
+            this.yChild = e.clientY;
+            setTimeout(() => {
+                this.xParent = e.clientX - 15;
+                this.yParent = e.clientY - 15;
+            }, 100);
         }
     },
     mounted: function(){
@@ -190,14 +209,29 @@ export default {
         if(localStorage.getItem('token') == null) {
             location.href="/index";
         }
+        document.addEventListener("mousemove", this.moveCursor);
+        document.addEventListener('mouseleave', e => {
+            this.hideCursor = true;
+        });
+        document.addEventListener('mouseenter', e => {
+            this.hideCursor = false;
+        });
         this.loadData();
     },
     watch:{
         userform(){
             this.progressBar = false
             this.loading = false
-        }    
-    }
+        },
+    },
+    computed: {
+        cursorCircle() {
+            return `transform: translateX(${this.xParent}px) translateY(${this.yParent}px) translateZ(0) translate3d(0, 0, 0);`
+        },
+        cursorPoint() {
+            return `transform: translateX(${this.xChild - 3}px) translateY(${this.yChild - 3}px) translateZ(0) translate3d(0, 0, 0);`
+        }
+    },
 }
 </script>
 
@@ -276,4 +310,45 @@ export default {
       height: 40px;
       font-weight: bold;
     }
+
+.g-cursor_hide {
+  opacity: 0;
+  width: 30px;
+  height: 30px;
+  transition: width 0.6s ease, height 0.6s ease, opacity 0.6s ease;
+}
+.g-cursor__circle {
+  pointer-events: none;
+  user-select: none;
+  top: 0;
+  left: 0;
+  position: fixed;
+  width: 30px;
+  height: 30px;
+  border: 2px solid #fff;
+  border-radius: 100%;
+  z-index: 5555;
+  backface-visibility: hidden;
+  transition: opacity 0.6s ease;
+}
+.g-cursor__point {
+  top: 0;
+  left: 0;
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+  user-select: none;
+  border-radius: 100%;
+  background: #fff;
+  z-index: 55555555;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+.g-cursor_hover .g-cursor__circle {
+  opacity: 0;
+  width: 80px;
+  height: 80px;
+  transition: width 0.6s ease, height 0.6s ease, opacity 0.6s ease;
+}
 </style>

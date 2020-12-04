@@ -217,7 +217,7 @@
             </v-card>
         </v-dialog>
         
-        <v-flex class="text-right" style="position: fixed; bottom: 10px; right: 10px;">
+        <v-flex class="text-right" style="position: fixed; bottom: 20px; right: 20px;">
             <v-progress-circular
             v-show="progressBar"
             indeterminate

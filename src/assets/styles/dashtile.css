@@ -4,6 +4,7 @@
   width:100%;
   display:flex;
   align-items:space-around;
+  flex-flow: wrap;
 }
 .tile
 {

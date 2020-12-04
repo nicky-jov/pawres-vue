@@ -6,7 +6,7 @@
             <font color="white">Welcome, {{username}}<font color="yellow">!</font></font>
         </h1>
         
-        <div class="modal fade" role="dialog" id="ﾖﾂﾊﾞ"><div class="modal-dialog center"><div class="modal-body"><img id="ysb" style="width: 50vw; float: left; object-fit: cover;"></div></div></div>
+        <div class="modal fade" role="dialog" id="ﾖﾂﾊﾞ"><div class="modal-dialog center"><div class="modal-body"><img id="ysb" style="width: 50vw; float: left; object-fit: cover;left: -10vw; position:}"></div></div></div>
         
         <br><br>
         <h4 class="text-left ml-5">
