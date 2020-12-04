@@ -98,4 +98,9 @@ export default {
   @import '../assets/styles/navigation.css';
   @import '../assets/styles/parallax.css';
   @import '../assets/styles/scrollbar.css';
+
+  
+.mapboxgl-popup-content {
+    background: #00000000 !important;
+}
 </style>

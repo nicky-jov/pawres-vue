@@ -120,24 +120,19 @@
                           <div class='cats'>GEOLOCATION</div>
                           <div class='title'>Our Company Location Details</div>
                           <div class='cats'>
-                            <MglMap
-                                container="map-test"
-                                :center.sync="center"
-                                :accessToken="accessToken"
-                                :mapStyle="mapStyle"
-                                @load="onMapLoaded"
+                            <MglMap id="map"
+                              :accessToken="this.accessToken"
+                              :mapStyle.sync="this.mapStyle"
+                              :center="this.coordinates"
+                              :zoom="12"
                             >
-                                <MglMarker
-                                :coordinates.sync="markerCoordinates"
-                                color='green'
-                                />
-                                <MglGeojsonLayer
-                                type="fill"
-                                :sourceId="sourceId"
-                                :layerId="layerId"
-                                :source="geojson"
-                                @click="handleClick"
-                                />
+                              <MglMarker :coordinates="coordinates" color="yellow">
+                                <MglPopup :style="{'background': '#00000000'}">
+                                  <VCard dark>
+                                    <div class="ma-2">PAWRes Headquarters is located here!</div>
+                                  </VCard>
+                                </MglPopup>
+                              </MglMarker>
                             </MglMap>
                           </div>
                         </div>
@@ -251,24 +246,21 @@
 </template>
 
 <script>
-import {
-  MglMap,
-  MglMarker,
-  MglGeojsonLayer
-} from 'vue-mapbox'
+import mapboxgl from "mapbox-gl";
+import { MglMap, MglPopup, MglMarker } from "vue-mapbox";
 
 export default {
+    name: "Index",
     components: {
-      MglMap
+      MglMap,
+      MglMarker,
+      MglPopup
     },
     data() {
         return {
             accessToken: 'pk.eyJ1Ijoibmlja3lqb3ZhbnVzIiwiYSI6ImNrZnFqc2Z6cTBqamUyeXBiaGNidzljOHEifQ.EmKNctj3vwr2nPn0beNhAQ',
             mapStyle: 'mapbox://styles/mapbox/dark-v9',
-            geojson: { /* … some geojson */},
-            layerId: 'firstLayer',
-            sourceId: 'firstSource',
-            markerCoordinates: '[50, 50]',
+            coordinates: [110.416169, -7.779292],
             iframe: "https://youtube.com/embed/RGj1KfeCBws?autoplay=1&start=361&controls=0&showinfo=0&autohide=1&mute=1",
             items: [
                 {title: 'About Us', to: "/index"},
@@ -282,7 +274,7 @@ export default {
         let mapboxScript = document.createElement('script')
         mapboxScript.setAttribute('src', 'https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js')
         document.head.appendChild(mapboxScript)
-        
+        new mapboxgl.Map();
     },
     methods: {
       onMapLoaded(event) {
@@ -290,12 +282,18 @@ export default {
         this.map = event.map;
         // or just to store if you want have access from other components
         this.$store.map = event.map;
-        
       },
     },
     created() {
-      // We need to set mapbox-gl library here in order to use it in template
-      // this.mapbox = Mapbox;
+      if (localStorage.getItem('reloaded')) {
+          // The page was just reloaded. Clear the value from local storage
+          // so that it will reload the next time this page is visited.
+          localStorage.removeItem('reloaded');
+      } else {
+          // Set a flag so that we know not to reload the page twice.
+          localStorage.setItem('reloaded', '1');
+          location.reload();
+      }
     }
 }
 </script>
@@ -305,13 +303,21 @@ body {
     overflow-y: hidden;
 }
 .mgl-map-wrapper {
-    height: 400px;
+    box-shadow: 0 0 20px 4px black;
     position: absolute;
     right: -380px;
     top: -175px;
     width: 500px;
-    box-shadow: 0 0 20px 4px black;
+    height: 400px;
     border: solid;
+}
+.mapboxgl-canvas {
+  width: 100%;
+  height: 100%;
+  left: 0;
+}
+.mapboxgl-popup-content {
+    background: #00000000 !important;
 }
 </style>
 
