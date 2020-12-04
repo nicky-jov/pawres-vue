@@ -40,6 +40,12 @@ body {
     background-size: 400% 400%;
 }
 
+
+pre {
+    font-family: 'Hurme';
+    color: white;
+}
+
 #menu {
     z-index: 2;
     height: 100%;
