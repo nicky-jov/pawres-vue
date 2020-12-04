@@ -88,7 +88,7 @@
                     <span class="headline" style="font-family: Hurme !important;">Change Picture</span>
                 </v-card-title>
                 <v-card-actions>
-                    <input class="ml-15" type="file" label="File" placeholder="Select file here..." @change='upload_image'>
+                    <input class="ml-15" type="file" label="File" placeholder="Select file here..." @change='upload_image' accept="image/*">
                 </v-card-actions>
                 <v-card-actions>
                     <v-spacer></v-spacer>
