@@ -52,14 +52,20 @@
                             <v-btn type="button" 
                                 class="btn btn-danger mr-2"
                                 data-toggle="modal" 
-                                @click="editDialog = true"
-                                data-target="#editmodal">Edit Profile
+                                @click="editDialog = true">Edit Profile
                             </v-btn>
                             <v-btn type="button" 
                                 class="btn btn-danger ml-2"
                                 data-toggle="modal" 
-                                @click="passwordDialog = true"
-                                data-target="#editmodal">Change Password
+                                @click="passwordDialog = true">Change Password
+                            </v-btn>
+                        </div>
+                        <br>
+                        <div class="center" v-if="isAdmin == false">
+                            <v-btn type="button" 
+                                class="btn btn-danger mr-2 red"
+                                data-toggle="modal" 
+                                @click="deleteDialog = true">Delete Account
                             </v-btn>
                         </div>
                     </td>
@@ -164,6 +170,38 @@
                 </v-flex>
             </v-card>
         </v-dialog>
+
+        
+        <v-dialog v-model="deleteDialog" persistent max-width="600px">
+            <v-card>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
+                    <v-flex class="text-right">
+                        <v-icon color="red" @click="deleteDialog = false">mdi-close</v-icon>
+                    </v-flex>
+                </v-card-actions>
+                <v-card-title>
+                    <span class="headline">Account Deletion</span>
+                </v-card-title>
+                <v-card-text>
+                    Are you certain that you want to delete this account?
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="white darken-1" text @click="deleteDialog = false">
+                        Cancel
+                    </v-btn>
+                    <v-btn color="red darken-1" text @click="deleteAccount"> 
+                        Delete
+                    </v-btn>
+                </v-card-actions>
+                <v-flex>
+                    <v-progress-linear v-show="progressBarDelete" slot="progress" color="red" indeterminate></v-progress-linear>
+                </v-flex>
+            </v-card>
+        </v-dialog>
         
         <v-flex class="text-right" style="position: fixed; bottom: 20px; right: 20px;">
             <v-progress-circular
@@ -203,9 +241,11 @@ export default {
             color: 'green',
             editDialog: false,
             passwordDialog: false,
+            deleteDialog: false,
             imgData: new FormData,
             progressBar: true,
             progressBarDialog: false,
+            progressBarDelete: false,
             userform: new FormData,
             isAdmin: false,
         }
@@ -331,6 +371,28 @@ export default {
                 this.color="red";
                 this.snackbar=true;
                 this.progressBarDialog = false;
+            });
+        },
+
+        deleteAccount() {
+            this.progressBarDelete = true;
+            this.$http.delete(this.$api + '/delete-user', {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+            }).then(response => {
+                this.error_message=response.data.message;
+                this.snackbar=true;
+                this.progressBarDelete = false;
+                this.color="green";
+                this.editDialog = false;
+                this.loadData();
+                location.href = "index";
+            }).catch(err => {
+                this.error_message=err.response.data.message;
+                this.color="red";
+                this.snackbar=true;
+                this.progressBarDelete = false;
             });
         }
     },

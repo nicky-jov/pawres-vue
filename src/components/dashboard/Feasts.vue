@@ -201,9 +201,25 @@
                 <v-card-text>
                     <li>Order No.: <span style="float: right;">{{editId}} </span></li>
                     <li>Reservation ID: <span style="float: right;">{{form.resid}} </span></li>
-                    <li>Category: <span style="float: right;">{{form.category}} </span></li>
                     <li>Type: <span style="float: right;">{{form.type}}  </span></li>
-                    <li>Price: <span style="float: right;">Rp. {{form.price}} </span></li>
+                    <li>Category: <span style="float: right;">{{form.category}} </span></li>
+                        <font size=2.5>
+                            <div v-if="form.category == 'A'">
+                                <ol>3x Meat Lover's Pizza <span style="float: right;">Rp. 150000</span></ol>
+                                <ol>3x Garlic Bread <span style="float: right;">Rp. 35000</span></ol>
+                                <ol>3x Cola <span style="float: right;">Rp. 15000</span></ol>
+                            </div>
+                            <div v-else-if="form.category == 'B'">
+                                <ol>2x Shoyu Ramen <span style="float: right;">Rp. 50000</span></ol>
+                                <ol>1x Miso <span style="float: right;">Rp. 15000</span></ol>
+                                <ol>2x (Hot/Iced) Ocha <span style="float: right;">Rp. 10000</span></ol>
+                            </div>
+                            <div v-else>
+                                <ol>1x Tenderloin Steak <span style="float: right;">Rp. 135000</span></ol>
+                                <ol>1x Orange Juice <span style="float: right;">Rp. 15000</span></ol>
+                            </div>
+                        </font>
+                    <li>Total Price: <span style="float: right;">Rp. {{form.price}} </span></li>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -465,43 +481,7 @@ export default {
             };
         },
         printDetails() {
-            var today = new Date();
-            var dd = String(today.getDate()).padStart(2, '0');
-            var mm = String(today.getMonth() + 1).padStart(2, '0');
-            var yyyy = today.getFullYear();
-            today = mm + '/' + dd + '/' + yyyy;
-            var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
-            WinPrint.document.write(`
-            <div style="width: 100%; text-align: -webkit-center; font-family: system-ui;">
-            <div style="width: 100%; height: 100%; box-shadow: 0 0 0 2px #7c7c7c;">
-            <br><div style="float: left;"><img src="https://pawres.s3.us-east-2.amazonaws.com/logo-black.png" 
-            style="height: 50px; margin-left: 50px;"/></div>
-            <br><br><br>
-            <h1>PawRes - Feast Details</h1><hr width="84%" color="black">
-            <br><div style="width: 80vw; text-align: left;">
-            Username: `,this.username,`
-            <span style="float: right;">Order No,: `,this.editId, `<br>
-            Date: `, today, `</span></div><br><br>
-            <table border="0" cellpadding="10" style="width: 80vw;" >
-            <tbody style="border: none;">
-                <tr>
-                    <th style="text-align: left;">Reservation ID:</th>
-                    <td style="text-align: right;">`, this.form.resid,`</td>
-                </tr>
-                <tr>
-                    <th style="text-align: left;">Category:</th>
-                    <td style="text-align: right;">Category `, this.form.category,`</td>
-                </tr>
-                <tr>
-                    <th style="text-align: left;">Type:</th>
-                    <td style="text-align: right;">`, this.form.type ,`</td>
-                </tr>
-                <tr>
-                    <th style="text-align: left;">Price:</th>
-                    <td style="text-align: right;"> Rp. `, this.form.price, `</td>
-                </tr>
-            </tbody></table><br><br></div></div>`);
-            WinPrint.document.close();
+            var WinPrint = window.open(this.$public + '/Feasts/'  + this.editId, '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
             WinPrint.focus();
             setTimeout(function () { WinPrint.print(); }, 500);
             window.onfocus = function () { setTimeout(function () { WinPrint.close(); }, 500); }

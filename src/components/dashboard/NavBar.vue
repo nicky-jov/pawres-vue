@@ -86,7 +86,7 @@
                 <v-btn color="white darken-1" text @click="logoutdialog = false;">
                     Cancel
                 </v-btn>
-                <v-btn color="blue darken-1" text @click="logout"> 
+                <v-btn color="yellow darken-1" text @click="logout"> 
                     Yes
                 </v-btn>
             </v-card-actions>
